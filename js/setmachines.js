@@ -81,7 +81,7 @@ function clickButton() {
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send(req);
         document.cookie = "infantry = " + JSON.stringify(arr);
-        xhrSend("menu");
+        xhrSend("method=gateway");
     }
     else {
         alert("Выберите хотя бы один отряд из каждой стороны!");

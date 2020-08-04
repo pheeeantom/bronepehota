@@ -11,6 +11,28 @@ function xhrSend (s) {
         }
     }
 }
+function createBackupCookies() {
+    if (getCookie("object-machines") && Object.keys(JSON.parse(getCookie("object-machines"))).length) {
+        document.cookie = "old-object-machines = " + getCookie("object-machines");
+        document.cookie = "old-polaris-machines = " + getCookie("polaris-machines");
+        document.cookie = "old-protectorat-machines = " + getCookie("protectorat-machines");
+    }
+}
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+if (getCookie("isFirstTimeEdit") == 1) {
+    createBackupCookies();
+    if (localStorage.getItem("logs")) {
+        localStorage.setItem("logs", localStorage.getItem("logs") + "<div class=\"turn\"><p>Прямое редактирование брони и боезапаса</p></div>");
+    }
+    else {
+        localStorage.setItem("logs", "<div class=\"turn\"><p>Прямое редактирование брони и боезапаса</p></div>");
+    }
+    document.cookie = "isFirstTimeEdit = 0";
+}
 document.getElementById('menu').addEventListener("click", backToMenu);
 var strength = document.getElementsByClassName('strength');
 for (var i = 0; i < strength.length; i++) {

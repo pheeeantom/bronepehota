@@ -188,7 +188,7 @@
 				else if ($side == 1) {
 					$nums = json_decode($_COOKIE['protectorat-machines']);
 				}
-				if (!is_null($_COOKIE["object-machines"]) && strcmp($_COOKIE['object-machines'], "{ }")) {
+				if (!is_null($_COOKIE["object-machines"]) && strcmp($_COOKIE['object-machines'], "{ }")) {//ЗДЕСЬ МОЖЕТ БЫТЬ ОШИБКА - ЛУЧШЕ COUNT
 					$obj = json_decode($_COOKIE["object-machines"]);
 					if ($side == 0 || $side == 1) {
 			            $size = count($nums);
@@ -1146,6 +1146,7 @@
 		<meta charset=\"utf-8\">
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
+		<link rel=\"stylesheet\" href=\"css/logs.css\">
 	</head>
 	<body>
 		<header>
@@ -1236,6 +1237,9 @@
 	</body>
 	</html>";
         	}
+        	else if ($_POST["method"] == "gateway") {
+        		header("Location: /");
+        	}
 			else {
 				if (is_null($_COOKIE["firstTime"])) {
 					$firstTime = true;
@@ -1260,6 +1264,7 @@
 				if ($firstTime) {
 	                header("Set-Cookie: isEmptyMachines=1");
 	            }
+	            header("Set-Cookie: isFirstTimeEdit=1");
 	            echo "<!DOCTYPE html>
 <html>
 	<head>
@@ -1278,18 +1283,23 @@
 				</ul>
 			</nav>
 		</header>";
+				if (!$firstTime) {
 	                echo "<div style=\"text-align: center;\"><button id=\"newgame\">Новая игра</button></div>
-	<br>
-	<div style=\"text-align: center;\"><button id=\"testshot\">Тест на выстрел</button></div>
-	<br>";
+	                <br>
+	                <div style=\"text-align: center;\"><button id=\"testshot\">Тест на выстрел</button></div>
+					<br>";
+				}
 				if ($firstTime) {
 	                echo "
 	<div style=\"text-align: center;\"><button id=\"setmachines\">Создать технику</button></div>
 	<br>";
 				}
-				echo "
+				if (!$firstTime && count(json_decode($_COOKIE['object-machines'], true))) {
+					echo "
 	<div style=\"text-align: center;\"><button id=\"editvalues\">Отредактировать боезапас или прочность</button></div>
-	<br>
+	<br>";
+				}
+			echo "	
 	<div style=\"text-align: center;\"><button id=\"logs\">История</button></div>
 	<script>
 	    function xhrSend (s) {
@@ -1313,15 +1323,20 @@
 		        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
 		        document.cookie = name + \"=;expires=Thu, 01 Jan 1970 00:00:00 GMT\";
 		    }
+		}";
+		if (!$firstTime) {
+			echo "document.getElementById('newgame').addEventListener(\"click\", newgameButtonListener);
+	    	document.getElementById('testshot').addEventListener(\"click\", testshotButtonListener);";
 		}
-	    document.getElementById('newgame').addEventListener(\"click\", newgameButtonListener);
-	    document.getElementById('testshot').addEventListener(\"click\", testshotButtonListener);";
 	    		if ($firstTime) {
 	                echo "
 	    document.getElementById('setmachines').addEventListener(\"click\", setmachinesButtonListener);";
 	            }
+	            if (!$firstTime && count(json_decode($_COOKIE['object-machines'], true))) {
+	            	echo "
+	    document.getElementById('editvalues').addEventListener(\"click\", editvaluesButtonListener);";
+	            }
 	            echo "
-	    document.getElementById('editvalues').addEventListener(\"click\", editvaluesButtonListener);
 	    document.getElementById('logs').addEventListener(\"click\", logsButtonListener);
 	    function newgameButtonListener() {
 	        var answer = confirm(\"Действительно начать новую игру?\");
