@@ -11,6 +11,7 @@ for (var i = 0; i < t.length; i++) {
     ti[i].addEventListener('change', changeInfantry);
     ti[i].value = "0";
 }*/
+var numOfMachines = 0;
 var t = document.getElementsByClassName('input');
 for (var i = 0; i < t.length; i++) {
     t[i].value = "0";
@@ -51,43 +52,51 @@ function getSiblingByTag(tag, th) {
 }
 document.getElementById('setmachines').addEventListener("click", clickButton);
 function clickButton() {
-    var emptyPolaris = true;
-    var emptyProtectorat = true;
-    var polaris = document.getElementById("polaris").getElementsByClassName("input-infantry");
-    for (var i = 0; i < polaris.length; i++) {
-        if (Number(polaris[i].innerHTML) > 0) {
-            emptyPolaris = false;
-        }
-    }
-    var protectorat = document.getElementById("protectorat").getElementsByClassName("input-infantry");
-    for (var i = 0; i < protectorat.length; i++) {
-        if (Number(protectorat[i].innerHTML) > 0) {
-            emptyProtectorat = false;
-        }
-    }
-    if (!emptyProtectorat && !emptyPolaris) {
-        var inputs = document.getElementsByClassName('input');
-        var req = "method=fillarraymachines&machines=";
-        for (var i = 0; i < inputs.length; i++) {
-            if (i != inputs.length - 1) {
-                req += inputs[i].parentNode.parentNode.id + ":" + inputs[i].innerHTML + ",";
-            }
-            else {
-                req += inputs[i].parentNode.parentNode.id + ":" + inputs[i].innerHTML;
-            }
-        }
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send(req);
-        document.cookie = "infantry = " + JSON.stringify(arr);
-        xhrSend("method=gateway");
+    if (numOfMachines > 20) {
+        alert("Машин больше 20! Пожалуйста, убавьте их количество!");
     }
     else {
-        alert("Выберите хотя бы один отряд из каждой стороны!");
+        var emptyPolaris = true;
+        var emptyProtectorat = true;
+        var polaris = document.getElementById("polaris").getElementsByClassName("input-infantry");
+        for (var i = 0; i < polaris.length; i++) {
+            if (Number(polaris[i].innerHTML) > 0) {
+                emptyPolaris = false;
+            }
+        }
+        var protectorat = document.getElementById("protectorat").getElementsByClassName("input-infantry");
+        for (var i = 0; i < protectorat.length; i++) {
+            if (Number(protectorat[i].innerHTML) > 0) {
+                emptyProtectorat = false;
+            }
+        }
+        if (!emptyProtectorat && !emptyPolaris) {
+            var inputs = document.getElementsByClassName('input');
+            var req = "method=fillarraymachines&machines=";
+            for (var i = 0; i < inputs.length; i++) {
+                if (i != inputs.length - 1) {
+                    req += inputs[i].parentNode.parentNode.id + ":" + inputs[i].innerHTML + ",";
+                }
+                else {
+                    req += inputs[i].parentNode.parentNode.id + ":" + inputs[i].innerHTML;
+                }
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send(req);
+            document.cookie = "infantry = " + JSON.stringify(arr);
+            xhrSend("method=gateway");
+        }
+        else {
+            alert("Выберите хотя бы один отряд из каждой стороны!");
+        }
     }
 }
-function plusListener() { 
+function plusListener() {
+    if (this.parentNode.parentNode.className != "unit") {
+        numOfMachines++; 
+    }
     var reg = /^\d+$/;
     if (document.getElementById("limit").value.match(reg)) {
         if (this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id == "polaris") {
@@ -131,10 +140,16 @@ function plusListener() {
     }
 }
 function minusListener() {
+    if (this.parentNode.parentNode.className != "unit") {
+        numOfMachines--;
+    }
     var input = getSiblingByTag("SPAN", this);
     input.innerHTML = Number(input.innerHTML) - 1;
     if (Number(input.innerHTML) < 0) {
         input.innerHTML = "0";
+        if (this.parentNode.parentNode.className != "unit") {
+            numOfMachines++;
+        }
     }
     else {
         if (this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id == "polaris") {

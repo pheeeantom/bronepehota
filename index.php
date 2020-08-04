@@ -1178,6 +1178,10 @@
 	<br>
 	<div style=\"text-align: center;\"><button id=\"ok\">Ок</button></div>
 	<script>
+		window.onload = function()
+		{
+    		document.getElementById('ok').scrollIntoView(true);
+		}
 	    function getCookie(name) {
 	      var value = \"; \" + document.cookie;
 	      var parts = value.split(\"; \" + name + \"=\");
