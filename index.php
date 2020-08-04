@@ -1,18 +1,18 @@
 <?php
 			error_reporting(E_ALL & ~E_NOTICE);
-			function error($str) {
+			/*function error($str) {
 				#foreach($_COOKIE as $key => $value) setcookie($key, '', time() - 3600, '/');
 				exit($str);
-			}
+			}*/
 			function getInfantry() {
 				if (!is_null($_COOKIE["infantry"])) {
 					$arr = json_decode($_COOKIE["infantry"]);
-					if (strcmp(gettype($arr), "array")) {
+					/*if (strcmp(gettype($arr), "array")) {
 						error("Ошибка куки: неверный тип infantry");
 					}
 					else if (count($arr) == 0) {
 						error("Ошибка куки: infantry не может быть пустым");
-					}
+					}*/
 					/*for ($i = 0; $i < count($arr); $i++) {
 						$ret .= strval($arr[$i]);
 						if ($i < count($arr) - 1) {
@@ -1245,9 +1245,9 @@
 					$firstTime = false;
 					//$next = true;
 				}
-				else {
+				/*else {
 					error("Ошибка куки: неверное значение firstTime");
-				}
+				}*/
 				//НЕ НАДО ЗАБОТИТЬСЯ О ТЕХ КТО ИЗМЕНИЛ ЦЕЛЕНАПРАВЛЕННО КУКИ, САМИ ВИНОВАТЫ
 				//А ЕСЛИ ЭТО ПО МОЕЙ ВИНЕ КУКИ ПОПОРТИЛИСЬ ТО НУЖНО ПРОСТО ПИСАТЬ ИСПРАВНЫЙ КОД
 				/*else if ($_COOKIE["firstTime"] != "0") {
