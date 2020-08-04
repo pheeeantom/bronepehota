@@ -1,0 +1,37 @@
+header li {
+	list-style-type: none;
+	display: inline-block;
+	padding-left: 8vw;
+}
+header li:nth-child(1) {
+	padding-left: 35vw;
+}
+header ul {
+	margin-left: 0; /* Отступ слева в браузере IE и Opera */
+	padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+	margin: 0;
+	padding-top: 10vh;
+	padding-bottom: 15vh;
+}
+header {
+	background-color: #ac9362; /*#ac9362*/
+}
+body {
+	margin: 0;
+}
+header a {
+	text-decoration: none;
+	color: black;
+	font-family: 'Arial', sans-serif;
+	transition: 0.5s;
+}
+#pointed {
+	padding-bottom: 25px;
+	border-bottom: 2px solid black;
+}
+header a:hover {
+	color: white;
+}
+#pointed:hover {
+	border: none;
+}
