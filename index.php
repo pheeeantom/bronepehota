@@ -98,13 +98,13 @@
 			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Дальн'];
 			                echo " Мощн=";
 			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Мощн'];
-			                echo " Бр=";
-			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Бр'];
 			            }
 			            else {
 			                echo "Стоим=";
 			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Стоим'];
 			            }
+			            echo " Бр=";
+			            echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Бр'];
 			            echo "\" src=\"/img/";
 			            echo $arr[$i*$ini_array['sizerow']*6+$j*6]['image'];
 			            echo "\" width=\"133\" height=\"143\" alt=\"error\">";
@@ -461,6 +461,14 @@
 			            echo $row[$i*$ini_array['sizerowmachine']+$j]['image'];
 			            echo "\" width=\"266\" height=\"200\" alt=\"error\" title=\"Стоим=";
 			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Стоимость'];
+			            echo " Скорострельность=";
+			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Скорострельность'];
+			            echo " Боезапас=";
+			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Боезапас'];
+			            echo " Прочность=";
+			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Прочность'];
+			            echo " Скорость=";
+			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Скорость'];
 			            echo "\">";
 			            echo "<br>\r\n";
 			            echo "<div><span class=\"input\">0</span><button class=\"plus\">+</button><button class=\"minus\">-</button></div>";
@@ -545,7 +553,7 @@
 	            header("Set-Cookie: object-machines=".createJsonMachines($machines),false);
 	            if ($isMinus) {
 	            	if ($machines[substr($_POST["target"], 3)]['strength'] == $strength[1] || $machines[substr($_POST["target"], 3)]['strength'] == $strength[2]) {//||==0
-	            		if (mb_strtolower($row['Название'], 'UTF-8') != str_replace("'", "", mb_strtolower($row['Орудия'], 'UTF-8'))) {
+	            		if (mb_strtolower($row['Название'], 'UTF-8') != str_replace("'", "", mb_strtolower($row['Орудия'], 'UTF-8'))) {//МОЖНО БЫЛО ПРОСТО ПО КЛАССУ В БД МОБИЛЬНОЕ ОРУДИЕ
 	            			if (rand()%3 == 0) {
 		            			echo "yes";
 		            		}
