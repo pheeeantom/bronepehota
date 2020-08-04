@@ -545,8 +545,10 @@
 	            header("Set-Cookie: object-machines=".createJsonMachines($machines),false);
 	            if ($isMinus) {
 	            	if ($machines[substr($_POST["target"], 3)]['strength'] == $strength[1] || $machines[substr($_POST["target"], 3)]['strength'] == $strength[2]) {//||==0
-	            		if (rand()%3 == 0) {
-	            			echo "yes";
+	            		if (mb_strtolower($row['Название'], 'UTF-8') != str_replace("'", "", mb_strtolower($row['Орудия'], 'UTF-8'))) {
+	            			if (rand()%3 == 0) {
+		            			echo "yes";
+		            		}
 	            		}
 	            	}
 	            }
@@ -961,22 +963,24 @@
 	                    }
 	                    $numOfDice = $levelAfter - $levelBefore;
 	                    if ($numOfDice > 0) {
-	                        $tempHTML .= "
-<p style=\"text-align: center; color: white; font-size: 20;\">Значения бросков теста на смерть пилота: ";
-	                        $isPilotKilled = false;
-	                        for ($i = 0; $i < $numOfDice; $i++) {
-	                            $val = 1 + rand()%6;
-	                            if ($val > 4) {
-	                                $isPilotKilled = true;
-	                            }
-	                            $tempHTML .= $val;
-	                            $tempHTML .= " ";
-	                        }
-	                        echo "</p>";
-	                        if ($isPilotKilled) {
-	                            $tempHTML .= "<p style=\"text-align: center; color: white; font-size: 20;\">Пилот убит</p>";
-	                            $logs .= "<p>Пилот убит</p>";
-	                        }
+	                    	if (mb_strtolower($row['Название'], 'UTF-8') != str_replace("'", "", mb_strtolower($row['Орудия'], 'UTF-8'))) {
+		                        $tempHTML .= "
+	<p style=\"text-align: center; color: white; font-size: 20;\">Значения бросков теста на смерть пилота: ";
+		                        $isPilotKilled = false;
+		                        for ($i = 0; $i < $numOfDice; $i++) {
+		                            $val = 1 + rand()%6;
+		                            if ($val > 4) {
+		                                $isPilotKilled = true;
+		                            }
+		                            $tempHTML .= $val;
+		                            $tempHTML .= " ";
+		                        }
+		                        echo "</p>";
+		                        if ($isPilotKilled) {
+		                            $tempHTML .= "<p style=\"text-align: center; color: white; font-size: 20;\">Пилот убит</p>";
+		                            $logs .= "<p>Пилот убит</p>";
+		                        }
+		                    }
 	                    }
 	                    if ($machines[substr($_COOKIE['idTarget'], 3)]['strength'] <= 0) {
 	                        $polarisMachines = json_decode($_COOKIE["polaris-machines"]);
