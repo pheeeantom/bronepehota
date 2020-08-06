@@ -375,7 +375,7 @@ function tdClickListener() {
             }
             var posTop = this.getBoundingClientRect().top + window.pageYOffset;
             var spoiler = document.getElementById("spoiler" + this.id.slice(3));
-            spoiler.style = "display: block; position: absolute; left: " + this.getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999; background-color: white; border-radius: 5px;";
+            spoiler.style = "display: block; position: absolute; left: " + this.getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999; background-color: white; border-radius: 5px; z-index: 1000;";
             spoilerVisible = true;
             var infsRows = spoiler.children[0].children[0].children;
             for (var i = 0; i < infsRows.length; i++) {

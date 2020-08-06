@@ -192,7 +192,7 @@
 				else if ($side == 1) {
 					$nums = json_decode($_COOKIE['protectorat-machines']);
 				}
-				if (!is_null($_COOKIE["object-machines"]) && strcmp($_COOKIE['object-machines'], "{ }")) {//ЗДЕСЬ МОЖЕТ БЫТЬ ОШИБКА - ЛУЧШЕ COUNT
+				if (!is_null($_COOKIE["object-machines"]) && strcmp($_COOKIE['object-machines'], "[]")) {//ЗДЕСЬ МОЖЕТ БЫТЬ ОШИБКА - ЛУЧШЕ COUNT
 					$obj = json_decode($_COOKIE["object-machines"]);
 					if ($side == 0 || $side == 1) {
 			            $size = count($nums);
@@ -505,11 +505,11 @@
                 }
                 return $sideMachines;
 			}
-			function deleteFromSideMachines($polarisMachines,$protectoratMachines,$target) {
+			function deleteFromSideMachines(&$polarisMachines,&$protectoratMachines,$target) {
                 $polarisMachines = subDeleteFromSideMachines($polarisMachines,$target);
                 $protectoratMachines = subDeleteFromSideMachines($protectoratMachines,$target);
-                header("Set-Cookie: polaris-machines=".json_encode($polarisMachines), false);
-	            header("Set-Cookie: protectorat-machines=".json_encode($protectoratMachines), false);
+                /*header("Set-Cookie: polaris-machines=".json_encode($polarisMachines), false);
+	            header("Set-Cookie: protectorat-machines=".json_encode($protectoratMachines), false);*/
 			}
 			function plusMinusStrength($dbh,$isMinus) {
 				$machines = getMachines(2);
@@ -547,12 +547,19 @@
 	            $protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
 	            if ($levelAfter == 3 && $isMinus) {
 	            	$machines[substr($_POST["target"], 3)]['id'] = 0;
+	            	$polarisMachines = json_decode($_COOKIE['polaris-machines']);
+	                $protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
                     deleteFromSideMachines($polarisMachines,$protectoratMachines,$_POST["target"]);
+                    header("Set-Cookie: polaris-machines=".json_encode($polarisMachines), false);
+	            	header("Set-Cookie: protectorat-machines=".json_encode($protectoratMachines), false);
 	            }
 	            $query .= "select*from warmachine where id=";
 	            $speed = explode("-", $row['Скорость']);
 	            if (($levelAfter < 3 && $levelAfter >= 0 && !$isMinus) || ($levelAfter != 3 && $isMinus)) {
 	                $machines[substr($_POST["target"], 3)]['speed'] = $speed[$levelAfter];
+	            }
+	            if (createJsonMachines($machines) == '[]') {
+	            	header("Set-Cookie: isEmptyMachines=1", false);
 	            }
 	            header("Set-Cookie: object-machines=".createJsonMachines($machines),false);
 	            if ($isMinus) {
@@ -588,7 +595,7 @@
 	            }
 	            header("Set-Cookie: object-machines=".createJsonMachines($machines));
 			}
-			function minusStrength($dbh, $flag, $target, $damage, &$tempHTML, &$logs, $isAttacker, &$machines) {
+			function minusStrength($dbh, $flag, $targetSide, $target, $damage, &$tempHTML, &$logs, $isAttacker, &$machines, &$polarisMachines, &$protectoratMachines) {
 				#$machines = getMachines(2);
 				$query = "select*from warmachine where id=";
                 $query .= "?";
@@ -685,9 +692,7 @@
                     }
                 }
                 if ($machines[substr($target, 3)]['strength'] <= 0) {
-                    $polarisMachines = json_decode($_COOKIE["polaris-machines"]);
-                    $protectoratMachines = json_decode($_COOKIE["protectorat-machines"]);
-                    deleteFromSideMachines($polarisMachines,$protectoratMachines,$target);
+                    deleteFromSideMachines($polarisMachines,$protectoratMachines,$targetSide);
                     $machines[substr($target, 3)]['id'] = 0;
                     $tempHTML .= "<p>Машина уничтожена</p>";
                     $logs .= "<p>Машина уничтожена</p>";
@@ -1058,8 +1063,15 @@
 	                }
 	                $tempHTML .= "</p>";
 	                if ($isKilled) {
-	                    minusStrength($dbh, true, $_COOKIE['idTarget'], $damage, $tempHTML, $logs, NULL, $machines);
+	                	$polarisMachines = json_decode($_COOKIE['polaris-machines']);
+	                	$protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
+	                    minusStrength($dbh, true, $_COOKIE['idTarget'], $_COOKIE['idTarget'], $damage, $tempHTML, $logs, NULL, $machines, $polarisMachines, $protectoratMachines);
+	                    header("Set-Cookie: polaris-machines=".json_encode($polarisMachines), false);
+	            		header("Set-Cookie: protectorat-machines=".json_encode($protectoratMachines), false);
 	                    header("Set-Cookie: object-machines=".createJsonMachines($machines), false);
+	                    if (createJsonMachines($machines) == '[]') {
+			            	header("Set-Cookie: isEmptyMachines=1", false);
+			            }
 	                    echo $tempHTML;
 	                }
 	                else {
@@ -1158,7 +1170,7 @@
 	                }
 	            }
 	            header("Set-Cookie: object-machines=".json_encode($obj), false);
-	            if (strcmp(json_encode($obj), "{ }")) {
+	            if (strcmp(json_encode($obj), "[]")) {
 	                header("Set-Cookie: isEmptyMachines=0", false);
 	            }
 	            header("Set-Cookie: polaris-machines=".json_encode($polaris), false);
@@ -1264,7 +1276,7 @@
 	        xhrSend(\"method=menu\");
 	    }
 	    function restoreCookiesEventListener() {
-	        if (getCookie(\"object-machines\") == \"{ }\") {
+	        if (getCookie(\"old-object-machines\") == \"[]\" && getCookie(\"object-machines\") == \"[]\") {
 	            if (document.getElementById(\"logs\").lastChild.lastChild.innerHTML != \"Отменено\") {
 	                var p = document.createElement(\"p\");
 	                p.innerHTML = \"Отменено\";
@@ -1278,6 +1290,9 @@
 	        }
 	        else {
 	            if (getCookie(\"old-object-machines\")) {
+	            	if (getCookie(\"object-machines\") == \"[]\") {
+	            		document.cookie = \"isEmptyMachines = 0\";
+	            	}
 	                document.cookie = \"object-machines = \" + getCookie(\"old-object-machines\");
 	                //document.cookie = \"size-object-machines = \" + getCookie(\"old-size-object-machines\");
 	                document.cookie = \"old-object-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT\";
@@ -1384,21 +1399,45 @@
     				if ($attack > $defence) {
 	    				$tempHTML .= "<p>Победил атакующий</p>";
 	    				$logs = "<p>Победил атакующий</p>";
-	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], ceil(($attack - $defence)/2), $tempHTML, $logs, true, $machines);
-	    				minusStrength($dbh, false, $_COOKIE['idTarget'], $attack - $defence, $tempHTML, $logs, false, $machines);
+	    				$polarisMachines = json_decode($_COOKIE['polaris-machines']);
+	                	$protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
+	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $_COOKIE['idAttacker'], ceil(($attack - $defence)/2), $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
+	    				if (substr($_COOKIE['idTarget'], 3) > substr($_COOKIE['idAttacker'], 3)) {
+	    					$target = substr($_COOKIE['idTarget'], 3) - 1;
+	    				}
+	    				minusStrength($dbh, false, $target, $_COOKIE['idTarget'], $attack - $defence, $tempHTML, $logs, false, $machines, $polarisMachines, $protectoratMachines);
+	    				header("Set-Cookie: polaris-machines=".json_encode($polarisMachines), false);
+	            		header("Set-Cookie: protectorat-machines=".json_encode($protectoratMachines), false);
 	    			}
 	    			else if ($attack < $defence) {
 	    				$tempHTML .= "<p>Победил защищающийся</p>";
 	    				$logs = "<p>Победил защищающийся</p>";
-	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $defence - $attack, $tempHTML, $logs, true, $machines);
-	    				minusStrength($dbh, false, $_COOKIE['idTarget'], ceil(($defence - $attack)/2), $tempHTML, $logs, false, $machines);
+	    				$polarisMachines = json_decode($_COOKIE['polaris-machines']);
+	                	$protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
+	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $_COOKIE['idAttacker'], $defence - $attack, $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
+	    				if (substr($_COOKIE['idTarget'], 3) > substr($_COOKIE['idAttacker'], 3)) {
+	    					$target = substr($_COOKIE['idTarget'], 3) - 1;
+	    				}
+	    				minusStrength($dbh, false, $target, $_COOKIE['idTarget'], ceil(($defence - $attack)/2), $tempHTML, $logs, false, $machines, $polarisMachines, $protectoratMachines);
+	    				header("Set-Cookie: polaris-machines=".json_encode($polarisMachines), false);
+	    				header("Set-Cookie: protectorat-machines=".json_encode($protectoratMachines), false);
 	    			}
 	    			else {
 	    				$tempHTML .= "<p>Ничья</p>";
 	    				$logs = "<p>Ничья</p>";
-	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], 0, $tempHTML, $logs, true, $machines);
-	    				minusStrength($dbh, false, $_COOKIE['idTarget'], 0, $tempHTML, $logs, false, $machines);
+	    				$polarisMachines = json_decode($_COOKIE['polaris-machines']);
+	                	$protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
+	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $_COOKIE['idAttacker'], 0, $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
+	    				if (substr($_COOKIE['idTarget'], 3) > substr($_COOKIE['idAttacker'], 3)) {
+	    					$target = substr($_COOKIE['idTarget'], 3) - 1;
+	    				}
+	    				minusStrength($dbh, false, $target, $_COOKIE['idTarget'], 0, $tempHTML, $logs, false, $machines, $polarisMachines, $protectoratMachines);
+	    				header("Set-Cookie: polaris-machines=".json_encode($polarisMachines), false);
+	    				header("Set-Cookie: protectorat-machines=".json_encode($protectoratMachines), false);
 	    			}
+	    			if (createJsonMachines($machines) == '[]') {
+		            	header("Set-Cookie: isEmptyMachines=1", false);
+		            }
 	    			header("Set-Cookie: object-machines=".createJsonMachines($machines), false);
     			}
     			echo $tempHTML;
@@ -1454,8 +1493,6 @@
 	                echo "<div style=\"text-align: center;\"><button id=\"newgame\">Новая игра</button></div>
 	                <br>
 	                <div style=\"text-align: center;\"><button id=\"testshot\">Тест на выстрел</button></div>
-					<br>
-					<div style=\"text-align: center;\"><button id=\"closecombat\">Ближний бой</button></div>
 					<br>";
 				}
 				if ($firstTime) {
@@ -1495,8 +1532,7 @@
 		}";
 		if (!$firstTime) {
 			echo "document.getElementById('newgame').addEventListener(\"click\", newgameButtonListener);
-	    	document.getElementById('testshot').addEventListener(\"click\", testshotButtonListener);
-	    	document.getElementById('closecombat').addEventListener(\"click\", closecombatButtonListener);";
+	    	document.getElementById('testshot').addEventListener(\"click\", testshotButtonListener);";
 		}
 	    		if ($firstTime) {
 	                echo "
@@ -1518,9 +1554,6 @@
 	    }
 	    function testshotButtonListener() {
 	        xhrSend(\"method=testshot:chooseattacker\");
-	    }
-	    function closecombatButtonListener() {
-	    	xhrSend(\"method=closecombat\");
 	    }
 	            ";
 	            if ($firstTime) {
