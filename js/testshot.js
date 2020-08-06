@@ -190,7 +190,15 @@ function computeChance() {
             document.getElementById("chance").innerHTML = "Вероятность пробития: " + chance + "%";
         }
         else {
-            var dif = parseInt(document.getElementById(id).dataset.armor) + parseInt(closecombat) - parseInt(document.getElementById(id2).dataset.armor) - parseInt(closecombat2);
+            var dif;
+            if (document.getElementById("combat").children[1].innerHTML == "Пехота") {
+                var closecombat = document.getElementById(id).dataset.cc;
+                var armor = document.getElementById(id2).dataset.armor;
+                dif = parseInt(closecombat) - parseInt(armor);
+            }
+            else {
+                dif = parseInt(document.getElementById(id).dataset.armor) + parseInt(closecombat) - parseInt(document.getElementById(id2).dataset.armor) - parseInt(closecombat2);
+            }
             var chance = 0;
             for (var i = 0; i < 6; i++) {
                 var temp = (dif + i)/6;

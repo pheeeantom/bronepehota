@@ -158,6 +158,8 @@
 						}
 						echo "\" data-armor=\"";
 						echo $arr[$i]['Бр'];
+						echo "\" data-cc=\"";
+						echo $arr[$i]['ББ'];
 						echo "\">";
 						#echo "<td>";
 						#echo "$i:$i3:$i6";
