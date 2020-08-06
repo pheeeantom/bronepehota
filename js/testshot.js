@@ -770,17 +770,33 @@ function menuClickListener() {
     xhrSend("method=menu");
 }
 function changeSide() {
-    var tds1 = document.getElementsByClassName('machine');
-    for (var i = 0; i < tds1.length; i++) {
-        tds1[i].style = "";
+    if (document.getElementById("combat").children[0].innerHTML == "Дальний бой") {
+        var tds1 = document.getElementsByClassName('machine');
+        for (var i = 0; i < tds1.length; i++) {
+            tds1[i].style = "";
+        }
+        var tds2 = document.getElementsByClassName('unit');
+        for (var i = 0; i < tds2.length; i++) {
+            tds2[i].style = "";
+        }
+        var blus = document.getElementsByClassName('blowup');
+        for (var i = 0; i < blus.length; i++) {
+            blus[i].style = "";
+        }
     }
-    var tds2 = document.getElementsByClassName('unit');
-    for (var i = 0; i < tds2.length; i++) {
-        tds2[i].style = "";
-    }
-    var blus = document.getElementsByClassName('blowup');
-    for (var i = 0; i < blus.length; i++) {
-        blus[i].style = "";
+    else {
+        if (document.getElementById("combat").children[1].innerHTML == "Пехота") {
+            var tds2 = document.getElementsByClassName('unit');
+            for (var i = 0; i < tds2.length; i++) {
+                tds2[i].style = "";
+            }
+        }
+        else {
+            var tds1 = document.getElementsByClassName('machine');
+            for (var i = 0; i < tds1.length; i++) {
+                tds1[i].style = "";
+            }
+        }
     }
     blu = false;
     req = "";

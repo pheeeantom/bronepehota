@@ -1350,7 +1350,7 @@
 	                $query .= "?";
 	                $query .= ";";
 	                $stmt = $dbh->prepare($query);
-					try {$stmt->execute(array($_COOKIE['idTarget'], 3));}
+					try {$stmt->execute(array(substr($_COOKIE['idTarget'], 3)));}
 	    			catch(PDOException $e){error($e->getMessage());}
 	    			$row = $stmt->fetch();
 	            }
