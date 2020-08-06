@@ -98,6 +98,8 @@
 			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Дальн'];
 			                echo " Мощн=";
 			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Мощн'];
+			                echo " ББ=";
+			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['ББ'];
 			            }
 			            else {
 			                echo "Стоим=";
@@ -163,6 +165,8 @@
 			            echo $arr[$i]['Дальн'];
 			            echo " Мощн=";
 			            echo $arr[$i]['Мощн'];
+			            echo " ББ=";
+			            echo $arr[$i]['ББ'];
 			            echo " Бр=";
 			            echo $arr[$i]['Бр'];
 			            echo "\" src=\"/img/";
@@ -552,7 +556,7 @@
 	            }
 	            header("Set-Cookie: object-machines=".createJsonMachines($machines),false);
 	            if ($isMinus) {
-	            	if ($machines[substr($_POST["target"], 3)]['strength'] == $strength[1] || $machines[substr($_POST["target"], 3)]['strength'] == $strength[2]) {//||==0
+	            	if ($machines[substr($_POST["target"], 3)]['strength'] == $strength[1] || $machines[substr($_POST["target"], 3)]['strength'] == $strength[2] || $machines[substr($_POST["target"], 3)]['strength'] == 0) {//||==0
 	            		if (mb_strtolower($row['Название'], 'UTF-8') != str_replace("'", "", mb_strtolower($row['Орудия'], 'UTF-8'))) {//МОЖНО БЫЛО ПРОСТО ПО КЛАССУ В БД МОБИЛЬНОЕ ОРУДИЕ
 	            			if (rand()%3 == 0) {
 		            			echo "yes";
@@ -583,6 +587,121 @@
 	            	$machines[substr($_POST["target"], 3)]['ammunition'] -= 1;
 	            }
 	            header("Set-Cookie: object-machines=".createJsonMachines($machines));
+			}
+			function minusStrength($dbh, $flag, $target, $damage, &$tempHTML, &$logs, $isAttacker, &$machines) {
+				#$machines = getMachines(2);
+				$query = "select*from warmachine where id=";
+                $query .= "?";
+                $query .= ";";
+                $stmt = $dbh->prepare($query);
+				try {$stmt->execute(array($machines[substr($target, 3)]['id']));}
+    			catch(PDOException $e){error($e->getMessage());}
+    			$row = $stmt->fetch();
+                $temp = $machines[intval(substr($target, 3))]['strength'];
+                $machines[intval(substr($target, 3))]['strength'] -= $damage;
+                if ($flag) {
+                	$tempHTML .= "<p>Броня пробита</p>";
+	                $logs = "<p>Броня пробита</p>";
+	                $tempHTML .= "<p>Урон - ";
+	                $logs .= "<p>Урон - ";
+	                $tempHTML .= $damage;
+	                $logs .= $damage;
+	                $tempHTML .= "</p>";
+	                $logs .= "</p>";
+                }
+                else {
+                	if ($isAttacker) {
+                		$tempHTML .= "<p>Урон атакующему - ";
+	                	$logs .= "<p>Урон атакующему - ";
+	                	$tempHTML .= $damage;
+	                	$logs .= $damage;
+	                	$tempHTML .= "</p>";
+	                	$logs .= "</p>";
+                	}
+                	else {
+                		$tempHTML .= "<p>Урон защищаемуся - ";
+	                	$logs .= "<p>Урон защищаемуся - ";
+	                	$tempHTML .= $damage;
+	                	$logs .= $damage;
+	                	$tempHTML .= "</p>";
+	                	$logs .= "</p>";
+                	}
+                }
+                $strength = explode("-", $row['Прочность']);
+                if ($machines[intval(substr($target, 3))]['strength'] <= $strength[0] && $machines[intval(substr($target, 3))]['strength'] > $strength[1]) {
+                    $levelAfter = 0;
+                }
+                else if ($machines[intval(substr($target, 3))]['strength'] <= $strength[1] && $machines[intval(substr($target, 3))]['strength'] > $strength[2]) {
+                    $levelAfter = 1;
+                }
+                else if ($machines[intval(substr($target, 3))]['strength'] <= $strength[2] && $machines[intval(substr($target, 3))]['strength'] > 0) {
+                    $levelAfter = 2;
+                }
+                else if ($machines[intval(substr($target, 3))]['strength'] <= 0) {
+                    $levelAfter = 3;
+                }
+                $query = "select*from warmachine where id=";
+                $query .= "?";
+                $query .= ";";
+                $stmt = $dbh->prepare($query);
+				try {$stmt->execute(array($machines[substr($target, 3)]['id']));}
+    			catch(PDOException $e){error($e->getMessage());}
+    			$row = $stmt->fetch();
+                $speed = explode("-", $row['Скорость']);
+                if ($levelAfter != 3) {
+                    $machines[substr($target, 3)]['speed'] = $speed[$levelAfter];
+                }
+                if ($temp <= $strength[0] && $temp > $strength[1]) {
+                    $levelBefore = 0;
+                }
+                else if ($temp <= $strength[1] && $temp > $strength[2]) {
+                    $levelBefore = 1;
+                }
+                else if ($temp <= $strength[2] && $temp > 0) {
+                    $levelBefore = 2;
+                }
+                else if ($temp <= 0) {
+                    $levelBefore = 3;
+                }
+                $numOfDice = $levelAfter - $levelBefore;
+                if ($numOfDice > 0) {
+                	if (mb_strtolower($row['Название'], 'UTF-8') != str_replace("'", "", mb_strtolower($row['Орудия'], 'UTF-8'))) {
+                        $tempHTML .= "
+<p>Значения бросков теста на смерть пилота: ";
+                        $isPilotKilled = false;
+                        for ($i = 0; $i < $numOfDice; $i++) {
+                            $val = 1 + rand()%6;
+                            if ($val > 4) {
+                                $isPilotKilled = true;
+                            }
+                            $tempHTML .= $val;
+                            $tempHTML .= " ";
+                        }
+                        echo "</p>";
+                        if ($isPilotKilled) {
+                            $tempHTML .= "<p>Пилот убит</p>";
+                            $logs .= "<p>Пилот убит</p>";
+                        }
+                    }
+                }
+                if ($machines[substr($target, 3)]['strength'] <= 0) {
+                    $polarisMachines = json_decode($_COOKIE["polaris-machines"]);
+                    $protectoratMachines = json_decode($_COOKIE["protectorat-machines"]);
+                    deleteFromSideMachines($polarisMachines,$protectoratMachines,$target);
+                    $machines[substr($target, 3)]['id'] = 0;
+                    $tempHTML .= "<p>Машина уничтожена</p>";
+                    $logs .= "<p>Машина уничтожена</p>";
+                    $size = count(json_decode($_COOKIE["object-machines"], true));
+                    $size--;
+                    if ($size < 0) {
+                        $size = 0;
+                    }
+                    #header("Set-Cookie: size-object-machines=".$size);
+                    if ($size == 0) {
+                        header("Set-Cookie: isEmptyMachines=1", false);
+                    }
+                }
+                #header("Set-Cookie: object-machines=".createJsonMachines($machines), false);
 			}
 			try {
 				$host = "localhost";
@@ -617,6 +736,7 @@
 		<meta charset=\"utf-8\">
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
+		<link rel=\"stylesheet\" href=\"css/testshot.css\">
 	</head>
 	<body>
 		<header>
@@ -629,7 +749,8 @@
 				</ul>
 			</nav>
 		</header>";
-				echo "<div style=\"text-align: center; position: relative; bottom: 20px;\"><span style=\"color: white; font-size: 20;\">Нажмите чтобы поменять атакующую сторону</span><img id=\"icon\" style=\"position: relative; top: 20px;  left: 20px;\" src=\"\" width=\"60\"></div>";
+				echo "<div id=\"icon-wrap\"><span>Нажмите чтобы поменять атакующую сторону</span><img id=\"icon\" src=\"\"></div>";
+				echo "<div id=\"combat\"><span>Дальний бой</span></div>";
 				echo "<table style=\"margin: auto; border-spacing: 100px 0px;\">";
             	echo "<tr>";
             	echo "<td id=\"polaris\">";
@@ -654,11 +775,11 @@
             	}
             	echo "<hr align=\"center\" width=\"400\" size=\"5\" color=\"Black\" />";
 	            printAllBlowUps($dbh);
-	            echo "<div style=\"text-align: center; padding-top: 35px;\" id=\"chance\">Вероятность пробития: ?</div>
-<div style=\"text-align: center; padding-top: 35px;\" id=\"send\"><button>Отправить</button></div>
-<div style=\"text-align: center; padding-top: 35px;\" id=\"menu\"><button>Меню</button></div>
+	            echo "<div id=\"chance\">Вероятность пробития: ?</div>
+<div id=\"send\"><button>Отправить</button></div>
+<div id=\"menu\"><button>Меню</button></div>
 <script src=\"/js/testshot.js\"></script>";
-				echo "	</body>
+				echo "</body>
 </html>";
 			}
 			else if ($_POST["method"] == "setttacker") {
@@ -712,7 +833,7 @@
                 }
 	            srand(time(NULL));
 	            echo "
-<p style=\"text-align: center; color: white; font-size: 20;\">Пройден ли тест на дальность? Значения: ";
+<p>Пройден ли тест на дальность? Значения: ";
 	            for ($i = 0; $i < $num; $i++) {
 	                echo 1 + rand()%$side + $mode;
 	                echo " ";
@@ -722,9 +843,9 @@
 	                echo "
 <br>
 <div style=\"text-align: center;\">
-<label style=\"color: white; font-size: 16;\"><input type=\"radio\">Близко</label>
-<label style=\"color: white; font-size: 16;\"><input type=\"radio\">Средне</label>
-<label style=\"color: white; font-size: 16;\"><input type=\"radio\">Далеко</label>
+<label><input type=\"radio\">Близко</label>
+<label><input type=\"radio\">Средне</label>
+<label><input type=\"radio\">Далеко</label>
 </div>";
 	            }
 	            echo "
@@ -740,21 +861,38 @@
 	                $query = "select Название, Номер from infantry where id=";
 	                $query .= "?";
 	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+					try {$stmt->execute(array(substr($_COOKIE['idAttacker'], 3)));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
 	            }
 	            else if (strpos($_COOKIE['idAttacker'], "lrw") !== false) {
 	                $query = "select Название from longrangeweapon where id=";
 	                $query .= "?";
 	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+					try {$stmt->execute(array(substr($_COOKIE['idAttacker'], 3)));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
+	            }
+	            else if (strpos($_COOKIE['idAttacker'], "obj") !== false) {
+	            	$query = "select Название from warmachine where id=";
+	                $query .= "?";
+	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+					try {$stmt->execute(array($machines[intval(substr($_COOKIE['idAttacker'], 3))]['id']));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
 	            }
 	            else if (strpos($_COOKIE['idAttacker'], "blu") !== false) {
 	                $query = "select Название from blowup where id=";
 	                $query .= "?";
 	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+					try {$stmt->execute(array(substr($_COOKIE['idAttacker'], 3)));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
 	            }
-	            $stmt = $dbh->prepare($query);
-				try {$stmt->execute(array(substr($_COOKIE['idAttacker'], 3)));}
-    			catch(PDOException $e){error($e->getMessage());}
-    			$row = $stmt->fetch();
 	            if (strpos($_COOKIE['idAttacker'], "inf") !== false) {
 	                $response = "<p>Атакующий боец из отряда:";
 	                $response .= $row[0];
@@ -764,6 +902,10 @@
 	            else if (strpos($_COOKIE['idAttacker'], "lrw") !== false) {
 	                $response = "<p>Атакующее орудие:";
 	                $response .= $row[0];
+	            }
+	            else if (strpos($_COOKIE['idAttacker'], "obj") !== false) {
+	            	$response = "<p>Атакующая машина:";
+	            	$response .= $row[0];
 	            }
 	            else if (strpos($_COOKIE['idAttacker'], "blu") !== false) {
 	                $response = "<p>Размер взрыва:";
@@ -883,7 +1025,7 @@
 	            list($num, $side) = mb_split("Д", $power);
 	            if (strpos($_COOKIE['idTarget'], "inf") !== false) {
 	                echo "
-<p style=\"text-align: center; color: white; font-size: 20;\">Значения бросков мощности: ";
+<p>Значения бросков мощности: ";
 	                $isKilled = false;
 	                for ($i = 0; $i < $num; $i++) {
 	                    $val = 1 + rand()%$side;
@@ -895,16 +1037,16 @@
 	                }
 	                echo "</p>";
 	                if ($isKilled) {
-	                    echo "<p style=\"text-align: center; color: white; font-size: 20;\">Боец убит</p>";
+	                    echo "<p>Боец убит</p>";
 	                    $logs = "<p>Боец убит</p>";
 	                }
 	                else {
-	                    echo "<p style=\"text-align: center; color: white; font-size: 20;\">Боец остался жив</p>";
+	                    echo "<p>Боец остался жив</p>";
 	                    $logs = "<p>Боец остался жив</p>";
 	                }
 	            }
 	            else if (strpos($_COOKIE['idTarget'], "obj") !== false) {
-	                $tempHTML = "<p style=\"text-align: center; color: white; font-size: 20;\">Значения бросков мощности: ";
+	                $tempHTML = "<p>Значения бросков мощности: ";
 	                $isKilled = false;
 	                for ($i = 0; $i < $num; $i++) {
 	                    $val = 1 + rand()%$side;
@@ -916,103 +1058,13 @@
 	                }
 	                $tempHTML .= "</p>";
 	                if ($isKilled) {
-	                    $query = "select*from warmachine where id=";
-	                    $query .= "?";
-	                    $query .= ";";
-	                    $stmt = $dbh->prepare($query);
-						try {$stmt->execute(array($machines[substr($_COOKIE['idTarget'], 3)]['id']));}
-		    			catch(PDOException $e){error($e->getMessage());}
-		    			$row = $stmt->fetch();
-	                    $temp = $machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'];
-	                    $machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] -= $damage;
-	                    $tempHTML .= "<p style=\"text-align: center; color: white; font-size: 20;\">Броня пробита</p>";
-	                    $logs = "<p>Броня пробита</p>";
-	                    $tempHTML .= "<p style=\"text-align: center; color: white; font-size: 20;\">Урон - ";
-	                    $logs .= "<p>Урон - ";
-	                    $tempHTML .= $damage;
-	                    $logs .= $damage;
-	                    $tempHTML .= "</p>";
-	                    $logs .= "</p>";
-	                    $strength = explode("-", $row['Прочность']);
-	                    if ($machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] <= $strength[0] && $machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] > $strength[1]) {
-	                        $levelAfter = 0;
-	                    }
-	                    else if ($machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] <= $strength[1] && $machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] > $strength[2]) {
-	                        $levelAfter = 1;
-	                    }
-	                    else if ($machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] <= $strength[2] && $machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] > 0) {
-	                        $levelAfter = 2;
-	                    }
-	                    else if ($machines[intval(substr($_COOKIE['idTarget'], 3))]['strength'] <= 0) {
-	                        $levelAfter = 3;
-	                    }
-	                    $query = "select*from warmachine where id=";
-	                    $query .= "?";
-	                    $query .= ";";
-	                    $stmt = $dbh->prepare($query);
-						try {$stmt->execute(array($machines[substr($_COOKIE['idTarget'], 3)]['id']));}
-		    			catch(PDOException $e){error($e->getMessage());}
-		    			$row = $stmt->fetch();
-	                    $speed = explode("-", $row['Скорость']);
-	                    if ($levelAfter != 3) {
-	                        $machines[substr($_COOKIE['idTarget'], 3)]['speed'] = $speed[$levelAfter];
-	                    }
-	                    if ($temp <= $strength[0] && $temp > $strength[1]) {
-	                        $levelBefore = 0;
-	                    }
-	                    else if ($temp <= $strength[1] && $temp > $strength[2]) {
-	                        $levelBefore = 1;
-	                    }
-	                    else if ($temp <= $strength[2] && $temp > 0) {
-	                        $levelBefore = 2;
-	                    }
-	                    else if ($temp <= 0) {
-	                        $levelBefore = 3;
-	                    }
-	                    $numOfDice = $levelAfter - $levelBefore;
-	                    if ($numOfDice > 0) {
-	                    	if (mb_strtolower($row['Название'], 'UTF-8') != str_replace("'", "", mb_strtolower($row['Орудия'], 'UTF-8'))) {
-		                        $tempHTML .= "
-	<p style=\"text-align: center; color: white; font-size: 20;\">Значения бросков теста на смерть пилота: ";
-		                        $isPilotKilled = false;
-		                        for ($i = 0; $i < $numOfDice; $i++) {
-		                            $val = 1 + rand()%6;
-		                            if ($val > 4) {
-		                                $isPilotKilled = true;
-		                            }
-		                            $tempHTML .= $val;
-		                            $tempHTML .= " ";
-		                        }
-		                        echo "</p>";
-		                        if ($isPilotKilled) {
-		                            $tempHTML .= "<p style=\"text-align: center; color: white; font-size: 20;\">Пилот убит</p>";
-		                            $logs .= "<p>Пилот убит</p>";
-		                        }
-		                    }
-	                    }
-	                    if ($machines[substr($_COOKIE['idTarget'], 3)]['strength'] <= 0) {
-	                        $polarisMachines = json_decode($_COOKIE["polaris-machines"]);
-	                        $protectoratMachines = json_decode($_COOKIE["protectorat-machines"]);
-	                        deleteFromSideMachines($polarisMachines,$protectoratMachines,$_COOKIE['idTarget']);
-	                        $machines[substr($_COOKIE['idTarget'], 3)]['id'] = 0;
-	                        $tempHTML .= "<p style=\"text-align: center; color: white; font-size: 20;\">Машина уничтожена</p>";
-	                        $logs .= "<p>Машина уничтожена</p>";
-	                        $size = count(json_decode($_COOKIE["object-machines"], true));
-	                        $size--;
-	                        if ($size < 0) {
-	                            $size = 0;
-	                        }
-	                        #header("Set-Cookie: size-object-machines=".$size);
-	                        if ($size == 0) {
-	                            header("Set-Cookie: isEmptyMachines=1", false);
-	                        }
-	                    }
+	                    minusStrength($dbh, true, $_COOKIE['idTarget'], $damage, $tempHTML, $logs, NULL, $machines);
 	                    header("Set-Cookie: object-machines=".createJsonMachines($machines), false);
 	                    echo $tempHTML;
 	                }
 	                else {
 	                    echo $tempHTML;
-	                    echo "<p style=\"text-align: center; color: white; font-size: 20;\">Броня не пробита</p>";
+	                    echo "<p>Броня не пробита</p>";
 	                    $logs .= "<p>Броня не пробита</p>";
 	                }
 	            }
@@ -1256,6 +1308,105 @@
         	else if ($_POST["method"] == "gateway") {
         		header("Location: /");
         	}
+        	else if ($_POST["method"] == "closecombat") {
+        		if (strpos($_COOKIE['idAttacker'], "inf") !== false) {
+	                $query = "select*from infantry where id=";
+	                $query .= "?";
+	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+					try {$stmt->execute(array(substr($_COOKIE['idAttacker'], 3)));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
+	    			$attack = $row['ББ'];
+	            }
+	            else if (strpos($_COOKIE['idAttacker'], "obj") !== false) {
+	            	$attack = $_POST['closecombat'];
+	            	$query = "select*from warmachine where id=";
+	                $query .= "?";
+	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+	                try {$stmt->execute(array(getMachines(2)[intval(substr($_COOKIE['idAttacker'], 3))]['id']));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
+	            	$attackArmor = substr($row['Прочность'], 0, strpos($row['Прочность'], '-'));
+	            }
+    			if (strpos($_COOKIE['idTarget'], "inf") !== false) {
+	                $query = "select*from infantry where id=";
+	                $query .= "?";
+	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+					try {$stmt->execute(array($_COOKIE['idTarget'], 3));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
+	            }
+	            else if (strpos($_COOKIE['idTarget'], "obj") !== false) {
+	            	$defence = $_POST['closecombat2'];
+	            	$query = "select*from warmachine where id=";
+	                $query .= "?";
+	                $query .= ";";
+	                $stmt = $dbh->prepare($query);
+	                try {$stmt->execute(array(getMachines(2)[intval(substr($_COOKIE['idTarget'], 3))]['id']));}
+	    			catch(PDOException $e){error($e->getMessage());}
+	    			$row = $stmt->fetch();
+	            }
+    			if (strpos($_COOKIE['idTarget'], "inf") !== false) {
+    				$defence = $row['Бр'];
+    			}
+    			else if (strpos($_COOKIE['idTarget'], "obj") !== false) {
+    				$defenceArmor = substr($row['Прочность'], 0, strpos($row['Прочность'], '-'));
+    			}
+    			$attackDice = rand()%6 + 1;
+    			$defenceDice = rand()%6 + 1;
+    			if (strpos($_COOKIE['idAttacker'], "inf") !== false && strpos($_COOKIE['idTarget'], "inf") !== false) {
+    				$tempHTML = "<p>Сумма ББ и кубика у атакующего: ".$attack."+".$attackDice."</p>";
+	    			$attack += $attackDice;
+	    			$tempHTML .= "<p>Сумма Бр и кубика у защищаегося: ".$defence."+".$defenceDice."</p>";
+	    			$defence += $defenceDice;
+	    			if ($attack > $defence) {
+	    				$tempHTML .= "<p>Победил атакующий</p>";
+	    				$logs = "<p>Победил атакующий</p>";
+	    			}
+	    			else if ($attack < $defence) {
+	    				$tempHTML .= "<p>Победил защищающийся</p>";
+	    				$logs = "<p>Победил защищающийся</p>";
+	    			}
+	    			else {
+	    				$tempHTML .= "<p>Ничья</p>";
+	    				$logs = "<p>Ничья</p>";
+	    			}
+    			}
+    			else {
+    				$tempHTML = "<p>Сумма ББ, брони и кубика у атакующего: ".$attack."+".$attackArmor."+".$attackDice."</p>";
+    				$attack += $attackArmor + $attackDice;
+    				$tempHTML .= "<p>Сумма ББ, брони и кубика у защищаегося: ".$defence."+".$defenceArmor."+".$defenceDice."</p>";
+    				$defence += $defenceArmor + $defenceDice;
+    				$machines = getMachines(2);
+    				if ($attack > $defence) {
+	    				$tempHTML .= "<p>Победил атакующий</p>";
+	    				$logs = "<p>Победил атакующий</p>";
+	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], ceil(($attack - $defence)/2), $tempHTML, $logs, true, $machines);
+	    				minusStrength($dbh, false, $_COOKIE['idTarget'], $attack - $defence, $tempHTML, $logs, false, $machines);
+	    			}
+	    			else if ($attack < $defence) {
+	    				$tempHTML .= "<p>Победил защищающийся</p>";
+	    				$logs = "<p>Победил защищающийся</p>";
+	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $defence - $attack, $tempHTML, $logs, true, $machines);
+	    				minusStrength($dbh, false, $_COOKIE['idTarget'], ceil(($defence - $attack)/2), $tempHTML, $logs, false, $machines);
+	    			}
+	    			else {
+	    				$tempHTML .= "<p>Ничья</p>";
+	    				$logs = "<p>Ничья</p>";
+	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], 0, $tempHTML, $logs, true, $machines);
+	    				minusStrength($dbh, false, $_COOKIE['idTarget'], 0, $tempHTML, $logs, false, $machines);
+	    			}
+	    			header("Set-Cookie: object-machines=".createJsonMachines($machines), false);
+    			}
+    			echo $tempHTML;
+    			echo "<br>
+<div style=\"text-align: center;\"><button id=\"ok\" style=\"text-align: center;\">Ok</button></div>";
+	            echo "//logs//";
+	            echo $logs;
+        	}
 			else {
 				if (is_null($_COOKIE["firstTime"])) {
 					$firstTime = true;
@@ -1303,6 +1454,8 @@
 	                echo "<div style=\"text-align: center;\"><button id=\"newgame\">Новая игра</button></div>
 	                <br>
 	                <div style=\"text-align: center;\"><button id=\"testshot\">Тест на выстрел</button></div>
+					<br>
+					<div style=\"text-align: center;\"><button id=\"closecombat\">Ближний бой</button></div>
 					<br>";
 				}
 				if ($firstTime) {
@@ -1342,7 +1495,8 @@
 		}";
 		if (!$firstTime) {
 			echo "document.getElementById('newgame').addEventListener(\"click\", newgameButtonListener);
-	    	document.getElementById('testshot').addEventListener(\"click\", testshotButtonListener);";
+	    	document.getElementById('testshot').addEventListener(\"click\", testshotButtonListener);
+	    	document.getElementById('closecombat').addEventListener(\"click\", closecombatButtonListener);";
 		}
 	    		if ($firstTime) {
 	                echo "
@@ -1364,6 +1518,9 @@
 	    }
 	    function testshotButtonListener() {
 	        xhrSend(\"method=testshot:chooseattacker\");
+	    }
+	    function closecombatButtonListener() {
+	    	xhrSend(\"method=closecombat\");
 	    }
 	            ";
 	            if ($firstTime) {

@@ -1,0 +1,32 @@
+#icon-wrap {
+	text-align: center;
+	position: relative;
+	bottom: 20px;
+}
+#icon-wrap > span {
+	font-size: 15px;
+}
+#icon {
+	position: relative;
+	top: 20px;
+	left: 20px;
+	width: 60px;
+}
+#combat,#type {
+	text-align: center;
+}
+#chance {
+	text-align: center;
+	padding-top: 35px;
+}
+#send,#menu {
+	text-align: center;
+	padding-top: 35px;
+}
+p {
+	text-align: center;
+	font-size: 15px;
+}
+label {
+	font-size: 12px;
+}
