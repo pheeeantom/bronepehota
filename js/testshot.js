@@ -70,6 +70,9 @@ if (getCookie("is-close") == 1) {
     else if (getCookie("is-machines") == 1) {
         document.getElementById("combat").innerHTML += "-<span>Техника</span>";
     }
+    else {
+        document.getElementById("combat").innerHTML += "-<span>Пехота</span>";
+    }
     document.getElementById("combat").children[1].addEventListener("click", changeTypeArmy);
     //document.cookie = "is-close = 1";
     var tds1 = document.getElementsByClassName('blowup');
@@ -96,7 +99,7 @@ if (getCookie("is-close") == 1) {
             }
         }, 150);
     }
-    else if (!getCookie("is-machines")) {
+    else {
         var tds2 = document.getElementsByClassName('machine');
         for (var i = 0; i < tds2.length; i++) {
             tds2[i].style = "display:none";
@@ -225,6 +228,9 @@ function changeCombat() {
         else if (getCookie("is-machines") == 1) {
             this.parentNode.innerHTML += "-<span>Техника</span>";
         }
+        else {
+            this.parentNode.innerHTML += "-<span>Пехота</span>";
+        }
         document.getElementById("combat").children[0].addEventListener("click", changeCombat);
         document.getElementById("combat").children[1].addEventListener("click", changeTypeArmy);
         document.cookie = "is-close = 1" + "; max-age=604800";
@@ -252,11 +258,19 @@ function changeCombat() {
                 }
             }, 100);
         }
-        else if (!getCookie("is-machines")) {
+        else {
             var tds2 = document.getElementsByClassName('machine');
             for (var i = 0; i < tds2.length; i++) {
                 tds2[i].style = "display:none";
             }
+            setTimeout(() => {
+                var tdsm = document.getElementsByClassName('machine');
+                for (var i = 0; i < tdsm.length; i++) {
+                    var posTop = tdsm[i].getBoundingClientRect().top + window.pageYOffset;
+                    tdsm[i].getElementsByTagName('img')[1].style = "display: block; position: absolute; left: " + tdsm[i].getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999;";
+                    tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
+                }
+            }, 100);
         }
         var hrs = document.getElementsByTagName("hr");
         for (var i = 0; i < hrs.length; i++) {
@@ -307,8 +321,8 @@ function changeCombat() {
             tds2[i].style = "";
         }
     }
-    else if (!getCookie("is-machines")) {
-        var tds2 = document.getElementsByClassName('machine');
+    else {
+        var tds2 = document.getElementsByClassName('unit');
         for (var i = 0; i < tds2.length; i++) {
             tds2[i].style = "";
         }
