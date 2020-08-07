@@ -85,7 +85,7 @@ function clickButton() {
             xhr.open('POST', '/', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.send(req);
-            document.cookie = "infantry = " + JSON.stringify(arr);
+            document.cookie = "infantry = " + JSON.stringify(arr) + "; max-age=604800";
             xhrSend("method=gateway");
         }
         else {

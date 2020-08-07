@@ -13,9 +13,9 @@ function xhrSend (s) {
 }
 function createBackupCookies() {
     if (getCookie("object-machines") && Object.keys(JSON.parse(getCookie("object-machines"))).length) {
-        document.cookie = "old-object-machines = " + getCookie("object-machines");
-        document.cookie = "old-polaris-machines = " + getCookie("polaris-machines");
-        document.cookie = "old-protectorat-machines = " + getCookie("protectorat-machines");
+        document.cookie = "old-object-machines = " + getCookie("object-machines") + "; max-age=604800";
+        document.cookie = "old-polaris-machines = " + getCookie("polaris-machines") + "; max-age=604800";
+        document.cookie = "old-protectorat-machines = " + getCookie("protectorat-machines") + "; max-age=604800";
     }
 }
 function getCookie(name) {
@@ -31,7 +31,7 @@ if (getCookie("isFirstTimeEdit") == 1) {
     else {
         localStorage.setItem("logs", "<div class=\"turn\"><p>Прямое редактирование брони и боезапаса</p></div>");
     }
-    document.cookie = "isFirstTimeEdit = 0";
+    document.cookie = "isFirstTimeEdit = 0" + "; max-age=604800";
 }
 document.getElementById('menu').addEventListener("click", backToMenu);
 var strength = document.getElementsByClassName('strength');

@@ -131,9 +131,9 @@ function changeSideMachine() {
             }
         }
     }
-    document.cookie = "polaris-machines = " + JSON.stringify(arrPolaris);
+    document.cookie = "polaris-machines = " + JSON.stringify(arrPolaris) + "; max-age=604800";
     //document.cookie = "size-polaris-machines = " + arrPolaris.length;
-    document.cookie = "protectorat-machines = " + JSON.stringify(arrProtectorat);
+    document.cookie = "protectorat-machines = " + JSON.stringify(arrProtectorat) + "; max-age=604800";
     //document.cookie = "size-protectorat-machines = " + arrProtectorat.length;
     xhrSend("method=testshot:chooseattacker");
 }
@@ -227,7 +227,7 @@ function changeCombat() {
         }
         document.getElementById("combat").children[0].addEventListener("click", changeCombat);
         document.getElementById("combat").children[1].addEventListener("click", changeTypeArmy);
-        document.cookie = "is-close = 1";
+        document.cookie = "is-close = 1" + "; max-age=604800";
         var tds1 = document.getElementsByClassName('blowup');
         for (var i = 0; i < tds1.length; i++) {
             tds1[i].style = "display:none";
@@ -266,7 +266,7 @@ function changeCombat() {
     else {
         this.parentNode.innerHTML = "<span>Дальний бой</span>";
         document.getElementById("combat").children[0].addEventListener("click", changeCombat);
-        document.cookie = "is-close = 0";
+        document.cookie = "is-close = 0" + "; max-age=604800";
         var tds1 = document.getElementsByClassName('blowup');
         for (var i = 0; i < tds1.length; i++) {
             tds1[i].style = "display:table-cell";
@@ -322,7 +322,7 @@ function changeCombat() {
 function changeTypeArmy() {
     if (this.innerHTML == "Пехота") {
         this.innerHTML = "Техника";
-        document.cookie = "is-machines = 1";
+        document.cookie = "is-machines = 1" + "; max-age=604800";
         var tds1 = document.getElementsByClassName('machine');
         for (var i = 0; i < tds1.length; i++) {
             tds1[i].style = "display:table-cell";
@@ -340,7 +340,7 @@ function changeTypeArmy() {
     }
     else {
         this.innerHTML = "Пехота";
-        document.cookie = "is-machines = 0";
+        document.cookie = "is-machines = 0" + "; max-age=604800";
         var tds1 = document.getElementsByClassName('machine');
         for (var i = 0; i < tds1.length; i++) {
             tds1[i].style = "display:none";
@@ -638,11 +638,11 @@ function getCheckKill() {
 }
 function createBackupCookies() {
     if (getCookie("object-machines") && Object.keys(JSON.parse(getCookie("object-machines"))).length) {
-        document.cookie = "old-object-machines = " + getCookie("object-machines");
+        document.cookie = "old-object-machines = " + getCookie("object-machines") + "; max-age=604800";
         //document.cookie = "old-size-object-machines = " + getCookie("size-object-machines");
-        document.cookie = "old-polaris-machines = " + getCookie("polaris-machines");
+        document.cookie = "old-polaris-machines = " + getCookie("polaris-machines") + "; max-age=604800";
         //document.cookie = "old-size-polaris-machines = " + getCookie("size-polaris-machines");
-        document.cookie = "old-protectorat-machines = " + getCookie("protectorat-machines");
+        document.cookie = "old-protectorat-machines = " + getCookie("protectorat-machines") + "; max-age=604800";
         //document.cookie = "old-size-protectorat-machines = " + getCookie("size-protectorat-machines");
     }
 }
@@ -683,7 +683,7 @@ function buttonClickListener() {
                 createBackupCookies();
                 getCompareDistance();
             }
-            document.cookie = "side = " + sideIcon;
+            document.cookie = "side = " + sideIcon + "; max-age=604800";
             //hile (flag == null) { sleep(100); }
             //if (flag) {
             //}
@@ -697,7 +697,7 @@ function buttonClickListener() {
         else {
             createBackupCookies();
             getCloseCombatResult();
-            document.cookie = "side = " + sideIcon;
+            document.cookie = "side = " + sideIcon + "; max-age=604800";
         }
     }
     else {
