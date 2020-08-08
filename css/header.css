@@ -1,12 +1,12 @@
-header li {
+nav > ul > li {
 	list-style-type: none;
 	display: inline-block;
 	padding-left: 8vw;
 }
-header li:nth-child(1) {
+nav > ul > li:nth-child(1) {
 	padding-left: 35vw;
 }
-header ul {
+nav > ul {
 	margin-left: 0; /* Отступ слева в браузере IE и Opera */
 	padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
 	margin: 0;
@@ -34,4 +34,18 @@ header a:hover {
 }
 #pointed:hover {
 	border: none;
+}
+#listSettings {
+	display: none;
+	position: absolute;
+	top: 0px;
+	left: 8vw;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid black;
+	background-color: white;
+	width: 10vw;
+}
+#listSettings > li {
+	list-style-type: none;
 }

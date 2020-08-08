@@ -372,7 +372,7 @@
 			            echo $row['image'];
 			            echo "\" width=\"266\" height=\"200\" alt=\"error\">";
 			            //display:none - arrows
-			            echo "<img class=\"arrow\" src=\"/img/arrows.jpg\" width=\"20\" height=\"20\">";
+			            echo "<img class=\"arrow\" src=\"/img/arrows.jpg\" width=\"20\" height=\"20\" style=\"display:none\">";
 			            if ($hasPlusMinus) {
 			            	echo "<br>
 <div class=\"strength\">Прочность<button class=\"plus\">+</button><button class=\"minus\">-</button></div>
@@ -754,6 +754,15 @@
 					<li><a href=\"/\">Правила</a></li>
 					<li><a href=\"/\">Армлисты</a></li>
 					<li><a href=\"/\">FAQ</a></li>
+					<li style=\"position:relative\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
+						<ul id=\"listSettings\">
+							<li>
+								<label>Показывать вероятности
+									<input type=\"checkbox\" id=\"showChance\">
+    							</label>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</nav>
 		</header>";
@@ -787,7 +796,8 @@
 <div id=\"send\"><button>Отправить</button></div>
 <div id=\"menu\"><button>Меню</button></div>
 <script src=\"/js/testshot.js\"></script>";
-				echo "</body>
+				echo "<script src=\"/js/cogwheel.js\"></script>
+				</body>
 </html>";
 			}
 			else if ($_POST["method"] == "setttacker") {
@@ -1105,6 +1115,15 @@
 					<li><a href=\"/\">Правила</a></li>
 					<li><a href=\"/\">Армлисты</a></li>
 					<li><a href=\"/\">FAQ</a></li>
+					<li style=\"position:relative\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
+						<ul id=\"listSettings\">
+							<li>
+								<label>Показывать вероятности
+									<input type=\"checkbox\" id=\"showChance\">
+    							</label>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</nav>
 		</header>";
@@ -1124,6 +1143,7 @@
 				echo "
 <div style=\"text-align: center;\"><button id=\"setmachines\">Ок</button></div>
 <script src=\"/js/setmachines.js\"></script>
+<script src=\"/js/cogwheel.js\"></script>
 </body>
 </html>";
 	        }
@@ -1195,6 +1215,15 @@
 					<li><a href=\"/\">Правила</a></li>
 					<li><a href=\"/\">Армлисты</a></li>
 					<li><a href=\"/\">FAQ</a></li>
+					<li style=\"position:relative\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
+						<ul id=\"listSettings\">
+							<li>
+								<label>Показывать вероятности
+									<input type=\"checkbox\" id=\"showChance\">
+    							</label>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</nav>
 		</header>";
@@ -1203,6 +1232,7 @@
 	            echo "
 	<div style=\"text-align: center;\"><button id=\"menu\">Ок</button></div>
 	<script src=\"/js/editvalues.js\"></script>
+	<script src=\"/js/cogwheel.js\"></script>
 	</body>
 	</html>";
 	        }
@@ -1235,6 +1265,15 @@
 					<li><a href=\"/\">Правила</a></li>
 					<li><a href=\"/\">Армлисты</a></li>
 					<li><a href=\"/\">FAQ</a></li>
+					<li style=\"position:relative\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
+						<ul id=\"listSettings\">
+							<li>
+								<label>Показывать вероятности
+									<input type=\"checkbox\" id=\"showChance\">
+    							</label>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</nav>
 		</header>";
@@ -1320,6 +1359,7 @@
 	        }
 	    }
 	</script>
+	<script src=\"/js/cogwheel.js\"></script>
 	</body>
 	</html>";
         	}
@@ -1489,6 +1529,15 @@
 					<li><a href=\"/\">Правила</a></li>
 					<li><a href=\"/\">Армлисты</a></li>
 					<li><a href=\"/\">FAQ</a></li>
+					<li style=\"position:relative\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
+						<ul id=\"listSettings\">
+							<li>
+								<label>Показывать вероятности
+									<input type=\"checkbox\" id=\"showChance\">
+    							</label>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</nav>
 		</header>";
@@ -1574,7 +1623,8 @@
 	        xhrSend(\"method=showlogs\");
 	    }
 	</script>";
-	echo "	</body>
+	echo "<script src=\"/js/cogwheel.js\"></script>
+	</body>
 </html>";
 				}
 			?>

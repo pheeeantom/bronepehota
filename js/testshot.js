@@ -63,6 +63,10 @@ else {
         tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
     }
 }, 100);*/
+for (var i = 0; i < tdsm.length; i++) {
+    tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
+    tdsm[i].getElementsByTagName('img')[1].style = "";
+}
 if (getCookie("is-close") == 1) {
     document.getElementById("combat").children[0].innerHTML = "Ближний бой";
     if (getCookie("is-machines") == 0) {
@@ -114,6 +118,9 @@ if (getCookie("is-close") == 1) {
     for (var i = 0; i < hrs.length; i++) {
         hrs[i].style = "display:none";
     }
+}
+if (getCookie("show-chance") == 0) {
+    document.getElementById("chance").style = "display:none";
 }
 document.getElementById("combat").children[0].addEventListener("click", changeCombat);
 var attackobj = "";
