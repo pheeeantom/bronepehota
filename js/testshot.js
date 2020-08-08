@@ -55,13 +55,14 @@ else {
     sideIcon = "polaris";
     document.getElementById("icon").src = "/img/polaris1.jpg";
 }
-setTimeout(() => { 
+/*setTimeout(() => { 
+    console.log("test");
     for (var i = 0; i < tdsm.length; i++) {
         var posTop = tdsm[i].getBoundingClientRect().top + window.pageYOffset;
         tdsm[i].getElementsByTagName('img')[1].style = "display: block; position: absolute; left: " + tdsm[i].getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999;";
         tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
     }
-}, 100);
+}, 100);*/
 if (getCookie("is-close") == 1) {
     document.getElementById("combat").children[0].innerHTML = "Ближний бой";
     if (getCookie("is-machines") == 0) {
@@ -90,14 +91,18 @@ if (getCookie("is-close") == 1) {
         for (var i = 0; i < tds2.length; i++) {
             tds2[i].style = "display:none";
         }
-        setTimeout(() => {
+        var tdsm = document.getElementsByClassName('machine');
+        for (var i = 0; i < tdsm.length; i++) {
+            tdsm[i].getElementsByTagName('img')[1].className = "arrow";
+        }
+        /*setTimeout(() => {
             var tdsm = document.getElementsByClassName('machine');
             for (var i = 0; i < tdsm.length; i++) {
                 var posTop = tdsm[i].getBoundingClientRect().top + window.pageYOffset;
                 tdsm[i].getElementsByTagName('img')[1].style = "display: block; position: absolute; left: " + tdsm[i].getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999;";
                 tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
             }
-        }, 150);
+        }, 150);*/
     }
     else {
         var tds2 = document.getElementsByClassName('machine');
@@ -249,28 +254,36 @@ function changeCombat() {
             for (var i = 0; i < tds2.length; i++) {
                 tds2[i].style = "display:none";
             }
-            setTimeout(() => {
+            var tdsm = document.getElementsByClassName('machine');
+            for (var i = 0; i < tdsm.length; i++) {
+                tdsm[i].getElementsByTagName('img')[1].className = "arrow";
+            }
+            /*setTimeout(() => {
                 var tdsm = document.getElementsByClassName('machine');
                 for (var i = 0; i < tdsm.length; i++) {
                     var posTop = tdsm[i].getBoundingClientRect().top + window.pageYOffset;
                     tdsm[i].getElementsByTagName('img')[1].style = "display: block; position: absolute; left: " + tdsm[i].getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999;";
                     tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
                 }
-            }, 100);
+            }, 100);*/
         }
         else {
             var tds2 = document.getElementsByClassName('machine');
             for (var i = 0; i < tds2.length; i++) {
                 tds2[i].style = "display:none";
             }
-            setTimeout(() => {
+            var tdsm = document.getElementsByClassName('machine');
+            for (var i = 0; i < tdsm.length; i++) {
+                tdsm[i].getElementsByTagName('img')[1].className = "arrow";
+            }
+            /*setTimeout(() => {
                 var tdsm = document.getElementsByClassName('machine');
                 for (var i = 0; i < tdsm.length; i++) {
                     var posTop = tdsm[i].getBoundingClientRect().top + window.pageYOffset;
                     tdsm[i].getElementsByTagName('img')[1].style = "display: block; position: absolute; left: " + tdsm[i].getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999;";
                     tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
                 }
-            }, 100);
+            }, 100);*/
         }
         var hrs = document.getElementsByTagName("hr");
         for (var i = 0; i < hrs.length; i++) {
@@ -299,10 +312,14 @@ function changeCombat() {
         }
         var tdsm = document.getElementsByClassName('machine');
         for (var i = 0; i < tdsm.length; i++) {
+            tdsm[i].getElementsByTagName('img')[1].className = "arrow";
+        }
+        /*var tdsm = document.getElementsByClassName('machine');
+        for (var i = 0; i < tdsm.length; i++) {
             var posTop = tdsm[i].getBoundingClientRect().top + window.pageYOffset;
             tdsm[i].getElementsByTagName('img')[1].style = "display: block; position: absolute; left: " + tdsm[i].getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999;";
             tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
-        }
+        }*/
     }
     blu = false;
     /*var tds1 = document.getElementsByClassName('machine');
@@ -347,10 +364,14 @@ function changeTypeArmy() {
         }
         var tdsm = document.getElementsByClassName('machine');
         for (var i = 0; i < tdsm.length; i++) {
+            tdsm[i].getElementsByTagName('img')[1].className = "arrow";
+        }
+        /*var tdsm = document.getElementsByClassName('machine');
+        for (var i = 0; i < tdsm.length; i++) {
             var posTop = tdsm[i].getBoundingClientRect().top + window.pageYOffset;
             tdsm[i].getElementsByTagName('img')[1].style = "display: block; position: absolute; left: " + tdsm[i].getBoundingClientRect().left + "px; top: " + posTop + "px; z-index:999;";
             tdsm[i].getElementsByTagName('img')[1].addEventListener("click", changeSideMachine);
-        }
+        }*/
     }
     else {
         this.innerHTML = "Пехота";

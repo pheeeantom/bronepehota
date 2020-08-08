@@ -355,7 +355,7 @@
 			            }
 			            echo "\" class=\"obj";
 			            echo $machines[$i]['id'];
-			            echo " machine\" data-armor=\"";
+			            echo " machine parent\" data-armor=\"";
 			            echo stristr($row['Прочность'], '-', true);
 			            echo "\">";
 			            echo "<img title=\"Скорострельность=";
@@ -371,7 +371,8 @@
 			            echo "\" src=\"/img/";
 			            echo $row['image'];
 			            echo "\" width=\"266\" height=\"200\" alt=\"error\">";
-			            echo "<img src=\"/img/arrows.jpg\" width=\"20\" height=\"20\" style=\"display: none;\">";
+			            //display:none - arrows
+			            echo "<img class=\"arrow\" src=\"/img/arrows.jpg\" width=\"20\" height=\"20\">";
 			            if ($hasPlusMinus) {
 			            	echo "<br>
 <div class=\"strength\">Прочность<button class=\"plus\">+</button><button class=\"minus\">-</button></div>
