@@ -120,14 +120,33 @@ function noButtonListener() {
     xhr.open('POST', '/', true);
     xhr.onload = function() {
         if (localStorage.getItem("logs")) {
-            localStorage.setItem("logs", localStorage.getItem("logs") + xhr.response);
+            if (delayedMachine != "") {
+                localStorage.setItem("logs", localStorage.getItem("logs") + "<div class=\"turn\"><p>Атакующая машина:" + delayedMachine + "</p>");
+                localStorage.setItem("logs", localStorage.getItem("logs") + xhr.response);
+            }
+            else {
+                localStorage.setItem("logs", localStorage.getItem("logs") + "<div class=\"turn\">" + xhr.response);
+            }
         }
         else {
-            localStorage.setItem("logs", xhr.response);
+            if (delayedMachine != "") {
+                localStorage.setItem("logs", "<div class=\"turn\"><p>Атакующая машина:" + delayedMachine + "</p>");
+                localStorage.setItem("logs", localStorage.getItem("logs") + xhr.response);
+            }
+            else {
+                localStorage.setItem("logs", "<div class=\"turn\">" + xhr.response);
+            }
         }
+        /*if (localStorage.getItem("logs")) {
+            localStorage.setItem("logs", localStorage.getItem("logs") + "<div class=\"turn\">" + xhr.response);
+        }
+        else {
+            localStorage.setItem("logs", "<div class=\"turn\">" + xhr.response);
+        }*/
         localStorage.setItem("logs", localStorage.getItem("logs") + "<p>Тест на дальность провален</p>");
         localStorage.setItem("logs", localStorage.getItem("logs") + "</div>");
-        xhrSend("testshot:chooseattacker;");
+        document.cookie = "success = 1";
+        xhrSend("method=testshot:chooseattacker");
     }
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send("method=logs:getattackerdefender");

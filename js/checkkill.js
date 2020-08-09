@@ -16,10 +16,12 @@ document.getElementsByTagName('body')[0].addEventListener("keypress", menuKeyLis
 function okButtonListener() {
     xhrSend("method=testshot:chooseattacker");
     localStorage.setItem("logs", localStorage.getItem("logs") + "</div>");
+    document.cookie = "success = 1";
 }
 function menuKeyListener(e) {
     if (e.keyCode == 13) {
         xhrSend("method=testshot:chooseattacker");
         localStorage.setItem("logs", localStorage.getItem("logs") + "</div>");
+        document.cookie = "success = 1";
     }
 }

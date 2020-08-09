@@ -631,6 +631,7 @@ function lrwListener() {
     computeChance();
 };
 function getCompareDistance() {
+    document.cookie = "success = 0";
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/', true);
     xhr.onload = function() {
@@ -676,6 +677,7 @@ function getCompareDistance() {
     xhr.send(req);
 }
 function getCheckKill() {
+    document.cookie = "success = 0";
     getRes(true);
 }
 function createBackupCookies() {
@@ -696,6 +698,7 @@ function buttonClickListener() {
             //alert(req2);
             var flag = null;
             if (ammoreq != "") {
+                createBackupCookies();
                 var xhr0 = new XMLHttpRequest();
                 xhr0.open('POST', '/', true);
                 xhr0.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -704,13 +707,15 @@ function buttonClickListener() {
                     if (xhr0.readyState == XMLHttpRequest.DONE) {
                         if (xhr0.responseText.split("//logs//")[0] == "error") {
                             alert("Не хватает боезапаса!");
+                            document.cookie = "old-object-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                            document.cookie = "old-polaris-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                            document.cookie = "old-protectorat-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
                             //flag = false;
                             //xhrSend("menu");
                         }
                         else if (xhr0.responseText.split("//logs//")[0] == "ok") {
                             //flag = true;
                             delayedMachine = xhr0.responseText.split("//logs//")[1];
-                            createBackupCookies();
                             getCompareDistance();
                         }
                     }
@@ -814,6 +819,7 @@ function getRes(flag) {
     xhr.send(req);
 }
 function getCloseCombatResult() {
+    document.cookie = "success = 0";
     getRes(false);
 }
 function menuClickListener() {

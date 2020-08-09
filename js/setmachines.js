@@ -42,6 +42,7 @@ function xhrSend (s) {
     }
 }
 function getSiblingByTag(tag, th) {
+    document.cookie = "firstTime = 0; max-age=604800";
     var sibling = th;
     do {
         if (sibling.nodeName == tag) {

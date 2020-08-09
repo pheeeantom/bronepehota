@@ -1099,7 +1099,7 @@
 	            echo $logs;
 	        }
 	        else if ($_POST["method"] == "setmachines") {
-	        	header("Set-Cookie: firstTime=0"."; max-age=604800");
+	        	#header("Set-Cookie: firstTime=0"."; max-age=604800");
 	        	echo "<!DOCTYPE html>
 <html>
 	<head>
@@ -1581,8 +1581,32 @@
 		        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
 		        document.cookie = name + \"=;expires=Thu, 01 Jan 1970 00:00:00 GMT\";
 		    }
+		}
+		function getCookie(name) {
+		  	var value = \"; \" + document.cookie;
+		  	var parts = value.split(\"; \" + name + \"=\");
+		  	if (parts.length == 2) return parts.pop().split(\";\").shift();
 		}";
 		if (!$firstTime) {
+			echo "
+			if (getCookie(\"success\") == 0) {
+				if (getCookie(\"old-object-machines\")) {
+					//alert(\"test\");
+	            	if (getCookie(\"object-machines\") == \"[]\") {
+	            		document.cookie = \"isEmptyMachines = 0\" + \"; max-age=604800\";
+	            	}
+	                document.cookie = \"object-machines = \" + getCookie(\"old-object-machines\") + \"; max-age=604800\";
+	                document.cookie = \"old-object-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT\";
+	                document.cookie = \"polaris-machines = \" + getCookie(\"old-polaris-machines\") + \"; max-age=604800\";
+	                document.cookie = \"old-polaris-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT\";
+	                document.cookie = \"protectorat-machines = \" + getCookie(\"old-protectorat-machines\") + \"; max-age=604800\";
+	                document.cookie = \"old-protectorat-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT\";
+	                if (localStorage.getItem(\"logs\")) {
+	                	localStorage.setItem(\"logs\", localStorage.getItem(\"logs\").slice(0, localStorage.getItem(\"logs\").lastIndexOf(\"<div\")));
+	                }
+	                document.cookie = \"success = 1\";
+	            }
+			}";
 			echo "document.getElementById('newgame').addEventListener(\"click\", newgameButtonListener);
 	    	document.getElementById('testshot').addEventListener(\"click\", testshotButtonListener);";
 		}
