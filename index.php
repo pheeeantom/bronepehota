@@ -1529,7 +1529,7 @@
 					<li><a href=\"/\">Правила</a></li>
 					<li><a href=\"/\">Армлисты</a></li>
 					<li><a href=\"/\">FAQ</a></li>
-					<li style=\"position:relative\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
+					<li style=\"position:relative;top:5px\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
 						<ul id=\"listSettings\">
 							<li>
 								<label>Показывать вероятности
@@ -1552,7 +1552,7 @@
 	<div style=\"text-align: center;\"><button id=\"setmachines\">Создать технику</button></div>
 	<br>";
 				}
-				if (!$firstTime && count(json_decode($_COOKIE['object-machines'], true))) {
+				if (!$firstTime && /*count(json_decode($_COOKIE['object-machines'], true))*/$_COOKIE['isEmptyMachines'] == 0) {
 					echo "
 	<div style=\"text-align: center;\"><button id=\"editvalues\">Отредактировать боезапас или прочность</button></div>
 	<br>";
@@ -1591,7 +1591,7 @@
 	    document.getElementById('setmachines').addEventListener(\"click\", setmachinesButtonListener);
 	    localStorage.removeItem('logs');";
 	            }
-	            if (!$firstTime && count(json_decode($_COOKIE['object-machines'], true))) {
+	            if (!$firstTime && /*count(json_decode($_COOKIE['object-machines'], true))*/$_COOKIE['isEmptyMachines'] == 0) {
 	            	echo "
 	    document.getElementById('editvalues').addEventListener(\"click\", editvaluesButtonListener);";
 	            }
