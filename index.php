@@ -112,7 +112,7 @@
 			            echo "\" width=\"133\" height=\"143\" alt=\"error\">";
 			            if ($set) {
 			                echo "<br>";
-			                echo "<div><span class=\"input-infantry\">0</span><button class=\"plus\">+</button><button class=\"minus\">-</button></div>";
+			                echo "<div class=\"wrap-num\"><span class=\"input-infantry\">0</span></div><div class=\"flex-buttons\"><button class=\"plus\">+</button><div class=\"line-break\"></div><button class=\"minus\">-</button></div>";
 			            }
 			            echo "</td>";
 			            #$k++;
@@ -478,7 +478,7 @@
 			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Скорость'];
 			            echo "\">";
 			            echo "<br>\r\n";
-			            echo "<div><span class=\"input\">0</span><button class=\"plus\">+</button><button class=\"minus\">-</button></div>";
+			            echo "<div class=\"wrap-num\"><span class=\"input\">0</span></div><div class=\"flex-buttons\"><button class=\"plus\">+</button><div class=\"line-break\"></div><button class=\"minus\">-</button></div>";
 			            echo "</td>";
 			        }
 			        echo "</tr>";
@@ -1106,6 +1106,7 @@
 		<meta charset=\"utf-8\">
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
+		<link rel=\"stylesheet\" href=\"css/plusminus.css\">
 	</head>
 	<body>
 		<header>
@@ -1127,18 +1128,18 @@
 				</ul>
 			</nav>
 		</header>";
-				echo "<p style=\"text-align: center; color: white; font-size: 20;\">Выберите участвующих в сражении юнитов</p>
+				echo "<p style=\"text-align: center;\">Выберите участвующих в сражении юнитов</p>
 <div style=\"text-align: center;\">Лимит:<input id=\"limit\"></div>";
 				echo "<div id=\"polaris\">";
 				printAllInfantry($dbh,false,true);
 				printAllWarMachines($dbh, false);
-				echo "<p id=\"polaris-money\" style=\"text-align: center; font-size: 20;\">0</p>";
+				echo "<p id=\"polaris-money\" style=\"text-align: center;\">0</p>";
 				echo "</div>";
 				echo "<hr align=\"center\" width=\"400\" size=\"5\" color=\"Black\" />";
-				echo "<div id=\"protectorat\" style=\"text-align: center; font-size: 20;\">";
+				echo "<div id=\"protectorat\">";
 				printAllInfantry($dbh,true,true);
 				printAllWarMachines($dbh, true);
-				echo "<p id=\"protectorat-money\">0</p>";
+				echo "<p id=\"protectorat-money\" style=\"text-align: center;\">0</p>";
 				echo "</div>";
 				echo "
 <div style=\"text-align: center;\"><button id=\"setmachines\">Ок</button></div>
@@ -1206,6 +1207,7 @@
 		<meta charset=\"utf-8\">
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
+		<link rel=\"stylesheet\" href=\"css/plusminus.css\">
 	</head>
 	<body>
 		<header>
@@ -1541,6 +1543,7 @@
 				</ul>
 			</nav>
 		</header>";
+		echo "<br>";
 				if (!$firstTime) {
 	                echo "<div style=\"text-align: center;\"><button id=\"newgame\">Новая игра</button></div>
 	                <br>

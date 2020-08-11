@@ -42,7 +42,6 @@ function xhrSend (s) {
     }
 }
 function getSiblingByTag(tag, th) {
-    document.cookie = "firstTime = 0; max-age=604800";
     var sibling = th;
     do {
         if (sibling.nodeName == tag) {
@@ -87,6 +86,7 @@ function clickButton() {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.send(req);
             document.cookie = "infantry = " + JSON.stringify(arr) + "; max-age=604800";
+            document.cookie = "firstTime = 0; max-age=604800";
             xhrSend("method=gateway");
         }
         else {
@@ -105,7 +105,7 @@ function plusListener() {
                 alert("Превышен лимит!");
             }
             else {
-                var input = getSiblingByTag("SPAN", this);
+                var input = this.parentNode.parentNode.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
                 input.innerHTML = Number(input.innerHTML) + 1;
                 this.parentNode.parentNode.getElementsByTagName('img')[0].style = "opacity: 1;";
                 polarisMoney += Number(this.parentNode.parentNode.dataset.cost);
@@ -117,7 +117,7 @@ function plusListener() {
                 alert("Превышен лимит!");
             }
             else {
-                var input = getSiblingByTag("SPAN", this);
+                var input = this.parentNode.parentNode.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
                 input.innerHTML = Number(input.innerHTML) + 1;
                 this.parentNode.parentNode.getElementsByTagName('img')[0].style = "opacity: 1;";
                 protectoratMoney += Number(this.parentNode.parentNode.dataset.cost);
@@ -144,7 +144,7 @@ function minusListener() {
     if (this.parentNode.parentNode.className != "unit") {
         numOfMachines--;
     }
-    var input = getSiblingByTag("SPAN", this);
+    var input = this.parentNode.parentNode.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
     input.innerHTML = Number(input.innerHTML) - 1;
     if (Number(input.innerHTML) < 0) {
         input.innerHTML = "0";

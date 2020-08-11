@@ -1,0 +1,29 @@
+.flex-buttons .plus, .flex-buttons .minus {
+  line-height: 1ex;
+  padding: 5px;
+}
+.plus, .minus {
+  border-radius: 0;
+  font-family: monospace;
+  border: 1px solid black;
+  background-color: rgb(230,230,230);
+}
+.plus:hover, .minus:hover {
+  background-color: rgb(225,225,225);
+}
+.flex-buttons {
+  display: inline-flex;
+  flex-flow: row wrap;
+  align-content: space-between;
+  justify-content: space-between;
+}
+.line-break {
+  width: 100%;
+}
+.wrap-num {
+  display: inline-block;
+  position: relative;
+  top: 12px;
+  font-size: 25px;
+  padding-right: 5px;
+}
