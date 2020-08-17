@@ -4,6 +4,7 @@
 }
 .turn {
 	padding-bottom: 50px;
+	text-align: center;
 }
 .turn:last-child {
 	padding-bottom: 0;

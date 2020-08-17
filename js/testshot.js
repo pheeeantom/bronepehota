@@ -406,7 +406,7 @@ function tdClickListener() {
         }
         var allspoilerslrw = document.getElementsByClassName("spoiler-lrw");
         for (var i = 0; i < allspoilerslrw.length; i++) {
-            allspoilerslrw[i].style = "display: none;";
+            setTimeout(function() {allspoilerslrw[i].style = "display: none;";}, 200);
         }
         spoilerVisible = false;
         if (this.id.includes("inf")) {
@@ -623,7 +623,7 @@ function lrwListener() {
     id = this.id;
     req = "method=setttacker&attacker=" + id;
     var sp = this.parentNode.parentNode.parentNode.parentNode;
-    sp.style = "display: none;";
+    setTimeout(function() {sp.style = "display: none;";}, 200);
     spoilerVisible = false;
     clearAll(document.getElementById(attackobj));
     document.getElementById(attackobj).style = "border: 6px solid orange; border-radius: 5px;";

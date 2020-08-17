@@ -1128,18 +1128,18 @@
 				</ul>
 			</nav>
 		</header>";
-				echo "<p style=\"text-align: center;\">Выберите участвующих в сражении юнитов</p>
-<div style=\"text-align: center;\">Лимит:<input id=\"limit\"></div>";
+				echo "<p style=\"text-align: center;text-decoration:underline\">Выберите участвующих в сражении юнитов</p>
+<div style=\"text-align:center\">Лимит:<input style=\"border-radius:5px;border:2px solid black\" id=\"limit\"></div>";
 				echo "<div id=\"polaris\">";
 				printAllInfantry($dbh,false,true);
 				printAllWarMachines($dbh, false);
-				echo "<p id=\"polaris-money\" style=\"text-align: center;\">0</p>";
+				echo "<p id=\"polaris-money\" style=\"text-align: center;font-size:20px\">0</p>";
 				echo "</div>";
 				echo "<hr align=\"center\" width=\"400\" size=\"5\" color=\"Black\" />";
 				echo "<div id=\"protectorat\">";
 				printAllInfantry($dbh,true,true);
 				printAllWarMachines($dbh, true);
-				echo "<p id=\"protectorat-money\" style=\"text-align: center;\">0</p>";
+				echo "<p id=\"protectorat-money\" style=\"text-align: center;font-size:20px\">0</p>";
 				echo "</div>";
 				echo "
 <div style=\"text-align: center;\"><button id=\"setmachines\">Ок</button></div>
@@ -1604,8 +1604,10 @@
 	                document.cookie = \"old-polaris-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT\";
 	                document.cookie = \"protectorat-machines = \" + getCookie(\"old-protectorat-machines\") + \"; max-age=604800\";
 	                document.cookie = \"old-protectorat-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT\";
-	                if (localStorage.getItem(\"logs\")) {
-	                	localStorage.setItem(\"logs\", localStorage.getItem(\"logs\").slice(0, localStorage.getItem(\"logs\").lastIndexOf(\"<div\")));
+			        if (localStorage.getItem(\"logs\")) {
+	                	if (!/<\\/div>$/.test(localStorage.getItem(\"logs\"))) {
+	                		localStorage.setItem(\"logs\", localStorage.getItem(\"logs\").slice(0, localStorage.getItem(\"logs\").lastIndexOf(\"<div\")));
+	                	}
 	                }
 	                document.cookie = \"success = 1\";
 	            }

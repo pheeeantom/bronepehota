@@ -22,7 +22,6 @@ body {
 header a {
 	text-decoration: none;
 	color: black;
-	font-family: 'Arial', sans-serif;
 	transition: 0.5s;
 }
 #pointed {
@@ -44,7 +43,7 @@ header a:hover {
 	border-radius: 5px;
 	border: 1px solid black;
 	background-color: white;
-	width: 10vw;
+	width: 12vw;
 	font-size: 12px;
 }
 #listSettings > li {
@@ -61,4 +60,7 @@ button:not(.plus):not(.minus) {
 button:hover:not(.plus):not(.minus) {
 	background-color: rgb(200,200,200);
 	box-shadow: 0 0 10px 0 rgba(0,0,0,0.25);
+}
+body {
+	font-family: 'Arial', sans-serif;
 }
