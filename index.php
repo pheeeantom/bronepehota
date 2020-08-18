@@ -52,21 +52,27 @@
     			#$numOfUnits = 13;
     			$ini_array = parse_ini_file("settings.ini");
     			$numOfUnits = $numOfUnits / 6;
-    			$numOfRows = ($numOfUnits-($numOfUnits%$ini_array['sizerow']))/$ini_array['sizerow'];
-    			if ($numOfUnits%$ini_array['sizerow'] > 0) {
+    			if ($_COOKIE['width'] > 1400) {
+    				$size = $ini_array['sizerow'];
+    			}
+    			else {
+    				$size = $ini_array['sizerowmob'];
+    			}
+    			$numOfRows = ($numOfUnits-($numOfUnits%$size))/$size;
+    			if ($numOfUnits%$size > 0) {
     				$numOfRows += 1;
     			}
     			for ($i = 0; $i < $numOfRows; $i++) {
     				echo "<tr>";
     				#$k = 0;
     				if ($i == $numOfRows - 1) {
-    					$jmax = $numOfUnits%$ini_array['sizerow'];
+    					$jmax = $numOfUnits%$size;
     					if ($jmax == 0) {
-    						$jmax = $ini_array['sizerow'];
+    						$jmax = $size;
     					}
     				}
     				else {
-    					$jmax = $ini_array['sizerow'];
+    					$jmax = $size;
     				}
     				for ($j = 0; $j < $jmax; $j++) {
     					/*if (!strcmp($arr[getInfantry()[$k]]['Сторона'],$sideStr)) {
@@ -86,29 +92,29 @@
 
     					}*/
     					echo "<td class=\"unit\" id=\"inf";
-    					echo $arr[$i*$ini_array['sizerow']*6+$j*6]['id'];
+    					echo $arr[$i*$size*6+$j*6]['id'];
     					if($set) {
     						echo "\" data-cost=\"";
-    						echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Стоим'];
+    						echo $arr[$i*$size*6+$j*6]['Стоим'];
     					}
     					echo "\">";
     					echo "<img title=\"";
     					if (!$set) {
 			                echo "Дальн=";
-			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Дальн'];
+			                echo $arr[$i*$size*6+$j*6]['Дальн'];
 			                echo " Мощн=";
-			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Мощн'];
+			                echo $arr[$i*$size*6+$j*6]['Мощн'];
 			                echo " ББ=";
-			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['ББ'];
+			                echo $arr[$i*$size*6+$j*6]['ББ'];
 			            }
 			            else {
 			                echo "Стоим=";
-			                echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Стоим'];
+			                echo $arr[$i*$size*6+$j*6]['Стоим'];
 			            }
 			            echo " Бр=";
-			            echo $arr[$i*$ini_array['sizerow']*6+$j*6]['Бр'];
+			            echo $arr[$i*$size*6+$j*6]['Бр'];
 			            echo "\" src=\"/img/";
-			            echo $arr[$i*$ini_array['sizerow']*6+$j*6]['image'];
+			            echo $arr[$i*$size*6+$j*6]['image'];
 			            echo "\" width=\"133\" height=\"143\" alt=\"error\">";
 			            if ($set) {
 			                echo "<br>";
@@ -333,7 +339,13 @@
 					$ini_array = parse_ini_file("settings.ini");
 					for ($i = 0; $i < count($machines); $i++) {
 						$rowi++;
-						if ($rowi != 1 && $rowi%$ini_array['sizerowmachine'] == 1) {
+						if ($_COOKIE['width'] > 1400) {
+							$size = $ini_array['sizerowmachine'];
+						}
+						else {
+							$size = $ini_array['sizerowmachinemob'];
+						}
+						if ($rowi != 1 && ($rowi%$size == 1 || $size == 1)) {
 							echo "</tr><tr>";
 						}
 						$query = "select*from warmachine where id=";
@@ -434,25 +446,31 @@
 				echo "<table border=\"0\" style=\"margin: auto;\">";
     			$numOfMachines = $stmt->rowCount();
     			$ini_array = parse_ini_file("settings.ini");
-    			$numOfRows = ($numOfMachines-($numOfMachines%$ini_array['sizerowmachine']))/$ini_array['sizerowmachine'];
-    			if ($numOfMachines%$ini_array['sizerowmachine'] > 0) {
+    			if ($_COOKIE['width'] > 1400) {
+    				$size = $ini_array['sizerowmachine'];
+    			}
+    			else {
+    				$size = $ini_array['sizerowmachinemob'];
+    			}
+    			$numOfRows = ($numOfMachines-($numOfMachines%$size))/$size;
+    			if ($numOfMachines%$size > 0) {
     				$numOfRows += 1;
     			}
     			for ($i = 0; $i < $numOfRows; $i++) {
     				echo "<tr>";
     				if ($i == $numOfRows - 1) {
-    					$jmax = $numOfMachines%$ini_array['sizerowmachine'];
+    					$jmax = $numOfMachines%$size;
     					if ($jmax == 0) {
-    						$jmax = $ini_array['sizerowmachine'];
+    						$jmax = $size;
     					}
     				}
     				else {
-    					$jmax = $ini_array['sizerowmachine'];
+    					$jmax = $size;
     				}
     				for ($j = 0; $j < $jmax; $j++) {
     					echo "<td id=\"";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['id'];
-			            if (!strcmp($row[$i*$ini_array['sizerowmachine']+$j]['Сторона'], "Нейтральный")) {
+			            echo $row[$i*$size+$j]['id'];
+			            if (!strcmp($row[$i*$size+$j]['Сторона'], "Нейтральный")) {
 			                echo "-";
 			                if ($side) {
 			                	echo 1;
@@ -462,20 +480,20 @@
 			                }
 			            }
 			            echo "\" data-cost=\"";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Стоимость'];
+			            echo $row[$i*$size+$j]['Стоимость'];
 			            echo "\">";
 			            echo "<img src=\"/img/";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['image'];
+			            echo $row[$i*$size+$j]['image'];
 			            echo "\" width=\"266\" height=\"200\" alt=\"error\" title=\"Стоим=";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Стоимость'];
+			            echo $row[$i*$size+$j]['Стоимость'];
 			            echo " Скорострельность=";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Скорострельность'];
+			            echo $row[$i*$size+$j]['Скорострельность'];
 			            echo " Боезапас=";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Боезапас'];
+			            echo $row[$i*$size+$j]['Боезапас'];
 			            echo " Прочность=";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Прочность'];
+			            echo $row[$i*$size+$j]['Прочность'];
 			            echo " Скорость=";
-			            echo $row[$i*$ini_array['sizerowmachine']+$j]['Скорость'];
+			            echo $row[$i*$size+$j]['Скорость'];
 			            echo "\">";
 			            echo "<br>\r\n";
 			            echo "<div class=\"wrap-num\"><span class=\"input\">0</span></div><div class=\"flex-buttons\"><button class=\"plus\">+</button><div class=\"line-break\"></div><button class=\"minus\">-</button></div>";
@@ -1572,6 +1590,7 @@
 			echo "	
 	<div style=\"text-align: center;\"><button id=\"logs\">История</button></div>
 	<script>
+		document.cookie = \"width = \" + window.screen.width + \"; max-age=604800\";
 	    function xhrSend (s) {
 	        var xhr = new XMLHttpRequest();
 	        xhr.open('POST', '/', true);
