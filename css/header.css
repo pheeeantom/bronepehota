@@ -10,8 +10,8 @@ nav > ul {
 	margin-left: 0; /* Отступ слева в браузере IE и Opera */
 	padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
 	margin: 0;
-	padding-top: 10vh;
-	padding-bottom: 15vh;
+	padding-top: 100px;
+	padding-bottom: 150px;
 }
 header {
 	background-color: #ac9362; /*#ac9362*/
@@ -63,4 +63,11 @@ button:hover:not(.plus):not(.minus):not(.swal-button--danger) {
 }
 body {
 	font-family: 'Arial', sans-serif;
+}
+@media screen and (max-device-width: 1400px) {
+	nav > ul > li:last-child {
+		display: block;
+		margin-left: 35vw;
+		margin-top: 40px;
+	}
 }

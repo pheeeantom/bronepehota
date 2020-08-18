@@ -1135,7 +1135,7 @@
 					<li><a href=\"/\" id=\"pointed\">Помощник</a></li>
 					<li><a href=\"/\">Правила</a></li>
 					<li><a href=\"/\">Армлисты</a></li>
-					<li><a href=\"/\">FAQ</a></li>
+					<li><a href=\"/\">FAQ</a></li>					
 					<li style=\"position:relative\"><img id=\"cogwheel\" src=\"/img/cogwheel.png\" width=\"30\" height=\"30\" alt=\"error\">
 						<ul id=\"listSettings\">
 							<li>
