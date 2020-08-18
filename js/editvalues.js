@@ -64,9 +64,13 @@ function minusStrength() {
     xhr.send("method=minusstrength&target=" + this.parentNode.parentNode.id);
     xhr.onload = function() {
         if (xhr.response == "yes") {
-            alert("Пилот убит!");
+            swal({
+                text: "Пилот убит!",
+            })
+            .then(function() {
+                xhrSend("method=editvalues");
+            });
         }
-        xhrSend("method=editvalues");
     }
 }
 function plusAmmunition() {

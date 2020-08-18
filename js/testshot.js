@@ -188,7 +188,7 @@ function clearAll(th) {
         }
     }
 }
-function computeChance() {
+function computeChance(cc1,cc2) {
     if (req && req2 && !spoilerVisible) {
         if (document.getElementById("combat").children[0].innerHTML == "Дальний бой") {
             var num = document.getElementById(id).dataset.num;
@@ -212,7 +212,7 @@ function computeChance() {
                 dif = parseInt(closecombat) - parseInt(armor);
             }
             else {
-                dif = parseInt(document.getElementById(id).dataset.armor) + parseInt(closecombat) - parseInt(document.getElementById(id2).dataset.armor) - parseInt(closecombat2);
+                dif = parseInt(document.getElementById(id).dataset.armor) + parseInt(cc1) - parseInt(document.getElementById(id2).dataset.armor) - parseInt(cc2);
             }
             var chance = 0;
             for (var i = 0; i < 6; i++) {
@@ -398,6 +398,9 @@ function changeTypeArmy() {
     id2 = "";
     document.getElementById("chance").innerHTML = "Вероятность пробития: ?";
 }
+function hideSpoiler(sp) {
+    sp.style = "display: none;";
+}
 function tdClickListener() {
     if (!block) {
         var allspoilers = document.getElementsByClassName("spoiler");
@@ -406,7 +409,7 @@ function tdClickListener() {
         }
         var allspoilerslrw = document.getElementsByClassName("spoiler-lrw");
         for (var i = 0; i < allspoilerslrw.length; i++) {
-            setTimeout(function() {allspoilerslrw[i].style = "display: none;";}, 200);
+            hideSpoiler(allspoilerslrw[i]);
         }
         spoilerVisible = false;
         if (this.id.includes("inf")) {
@@ -440,7 +443,9 @@ function tdClickListener() {
                 clearAll(this);
                 if (this.parentNode.parentNode.parentNode.parentNode.id.includes(sideIcon)) {
                     if (this.id.slice(0, this.id.indexOf("-")) == id2.slice(0, id2.indexOf("-"))) {
-                        alert("Машина не может стрелять в саму себя!");//это уже не нужно
+                        swal({
+                            text: "Машина не может стрелять в саму себя!",
+                        });//это уже не нужно
                     }
                     else {
                         attackobj = this.id;
@@ -459,51 +464,77 @@ function tdClickListener() {
                             }
                         }
                         else {
-                            closecombat = prompt("ББ:");
-                            if (Number.isInteger(parseInt(closecombat)) && /^[0-9]+$/.test(closecombat)) {
-                                if (closecombat >= 0) {
-                                    id = this.id;
-                                    req = "method=setttacker&attacker=" + id.slice(0, id.indexOf("-"));
-                                    this.style = "border: 6px solid orange; border-radius: 5px;";
+                            swal({
+                                text: "ББ:",
+                                content: "input",
+                                button: "ОК",
+                            })
+                            .then((res) => {
+                                closecombat = res;
+                                if (Number.isInteger(parseInt(closecombat)) && /^[0-9]+$/.test(closecombat)) {
+                                    if (closecombat >= 0) {
+                                        id = this.id;
+                                        req = "method=setttacker&attacker=" + id.slice(0, id.indexOf("-"));
+                                        this.style = "border: 6px solid orange; border-radius: 5px;";
+                                    }
+                                    else {
+                                        swal({
+                                            text: "Нужно ввести неотрицательное число",
+                                        });
+                                    }
                                 }
                                 else {
-                                    alert("Нужно ввести неотрицательное число");
+                                    swal({
+                                        text: "Нужно ввести число",
+                                    });
                                 }
-                            }
-                            else {
-                                alert("Нужно ввести число");
-                            }
-                            computeChance();
+                                computeChance(closecombat, closecombat2);
+                            });
                         }
                     }
                 }
                 else {
                     if (ammoreq.includes(this.id.slice(0, this.id.indexOf("-")))) {
-                        alert("Машина не может стрелять в саму себя!");//это уже не нужно
+                        swal({
+                            text: "Машина не может стрелять в саму себя!",
+                        });//это уже не нужно
                     }
                     else {
                         if (document.getElementById("combat").children[0].innerHTML == "Дальний бой") {
                             id2 = this.id;
                             req2 = "method=settarget&target=" + id2.slice(0, id2.indexOf("-"));
                             this.style = "border: 6px solid orange; border-radius: 5px;";
+                            computeChance();
                         }
                         else {
-                            closecombat2 = prompt("ББ:");
-                            if (Number.isInteger(parseInt(closecombat2)) && /^[0-9]+$/.test(closecombat2)) {
-                                if (closecombat2 >= 0) {
-                                    id2 = this.id;
-                                    req2 = "method=settarget&target=" + id2.slice(0, id2.indexOf("-"));
-                                    this.style = "border: 6px solid orange; border-radius: 5px;";
+                            swal({
+                                text: "ББ:",
+                                content: "input",
+                                button: "ОК",
+                            })
+                            .then((res) => {
+                                closecombat2 = res;
+                                if (Number.isInteger(parseInt(closecombat2)) && /^[0-9]+$/.test(closecombat2)) {
+                                    if (closecombat2 >= 0) {
+                                        id2 = this.id;
+                                        req2 = "method=settarget&target=" + id2.slice(0, id2.indexOf("-"));
+                                        this.style = "border: 6px solid orange; border-radius: 5px;";
+                                    }
+                                    else {
+                                        swal({
+                                            text: "Нужно ввести неотрицательное число",
+                                        });
+                                    }
                                 }
                                 else {
-                                    alert("Нужно ввести неотрицательное число");
+                                    swal({
+                                        text: "Нужно ввести число",
+                                    });
                                 }
-                            }
-                            else {
-                                alert("Нужно ввести число");
-                            }
+                                //alert(closecombat);
+                                computeChance(closecombat, closecombat2);
+                            });
                         }
-                        computeChance();
                     }
                 }
             }
@@ -581,7 +612,9 @@ function infsListener() {
         if (document.getElementById("inf" + this.parentNode.parentNode.parentNode.parentNode.id.slice(7)).parentNode.parentNode.parentNode.parentNode.id == sideIcon) {
             if (document.getElementById("combat").children[0].innerHTML == "Дальний бой") {
                 if (this.className.includes("melee")) {
-                    alert("Нельзя выбрать ближника атакующим!");
+                    swal({
+                        text: "Нельзя выбрать ближника атакующим!",
+                    });
                     melee = true;
                 }
                 else {
@@ -623,7 +656,7 @@ function lrwListener() {
     id = this.id;
     req = "method=setttacker&attacker=" + id;
     var sp = this.parentNode.parentNode.parentNode.parentNode;
-    setTimeout(function() {sp.style = "display: none;";}, 200);
+    setTimeout(hideSpoiler, 200, sp);
     spoilerVisible = false;
     clearAll(document.getElementById(attackobj));
     document.getElementById(attackobj).style = "border: 6px solid orange; border-radius: 5px;";
@@ -706,7 +739,9 @@ function buttonClickListener() {
                 xhr0.onreadystatechange = function() {
                     if (xhr0.readyState == XMLHttpRequest.DONE) {
                         if (xhr0.responseText.split("//logs//")[0] == "error") {
-                            alert("Не хватает боезапаса!");
+                            swal({
+                                text: "Не хватает боезапаса!",
+                            });
                             document.cookie = "old-object-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
                             document.cookie = "old-polaris-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
                             document.cookie = "old-protectorat-machines = ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
@@ -748,7 +783,9 @@ function buttonClickListener() {
         }
     }
     else {
-        alert("Не выбраны атакующий или цель или все сразу!");
+        swal({
+            text: "Не выбраны атакующий или цель или все сразу!",
+        });
     }
 }
 function getRes(flag) {

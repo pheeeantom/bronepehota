@@ -49,7 +49,7 @@ header a:hover {
 #listSettings > li {
 	list-style-type: none;
 }
-button:not(.plus):not(.minus) {
+button:not(.plus):not(.minus):not(.swal-button--danger) {
 	cursor: pointer;
 	border: none;
 	padding: 8px;
@@ -57,7 +57,7 @@ button:not(.plus):not(.minus) {
 	background-color: rgb(230,230,230);
 	transition: 0.5s;
 }
-button:hover:not(.plus):not(.minus) {
+button:hover:not(.plus):not(.minus):not(.swal-button--danger) {
 	background-color: rgb(200,200,200);
 	box-shadow: 0 0 10px 0 rgba(0,0,0,0.25);
 }

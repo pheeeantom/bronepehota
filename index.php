@@ -745,6 +745,7 @@
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
 		<link rel=\"stylesheet\" href=\"css/testshot.css\">
+		<script src=\"https://unpkg.com/sweetalert/dist/sweetalert.min.js\"></script>
 	</head>
 	<body>
 		<header>
@@ -1107,6 +1108,7 @@
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
 		<link rel=\"stylesheet\" href=\"css/plusminus.css\">
+		<script src=\"https://unpkg.com/sweetalert/dist/sweetalert.min.js\"></script>
 	</head>
 	<body>
 		<header>
@@ -1208,6 +1210,7 @@
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
 		<link rel=\"stylesheet\" href=\"css/plusminus.css\">
+		<script src=\"https://unpkg.com/sweetalert/dist/sweetalert.min.js\"></script>
 	</head>
 	<body>
 		<header>
@@ -1258,6 +1261,7 @@
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
 		<link rel=\"stylesheet\" href=\"css/logs.css\">
+		<script src=\"https://unpkg.com/sweetalert/dist/sweetalert.min.js\"></script>
 	</head>
 	<body>
 		<header>
@@ -1329,7 +1333,9 @@
 	                localStorage.setItem(\"logs\", document.getElementById(\"logs\").innerHTML);
 	            }
 	            else {
-	                alert(\"Уже отменено!\");
+	            	swal({
+            			text: \"Уже отменено!\",
+        			});
 	            }
 	        }
 	        else {
@@ -1356,7 +1362,9 @@
 	                localStorage.setItem(\"logs\", document.getElementById(\"logs\").innerHTML);
 	            }
 	            else {
-	                alert(\"Уже отменено!\");
+	                swal({
+            			text: \"Уже отменено!\",
+        			});
 	            }
 	        }
 	    }
@@ -1522,6 +1530,7 @@
 		<meta charset=\"utf-8\">
 		<title>Помощник для бронепехоты</title>
 		<link rel=\"stylesheet\" href=\"css/header.css\">
+		<script src=\"https://unpkg.com/sweetalert/dist/sweetalert.min.js\"></script>
 	</head>
 	<body>
 		<header>
@@ -1627,12 +1636,19 @@
 	            echo "
 	    document.getElementById('logs').addEventListener(\"click\", logsButtonListener);
 	    function newgameButtonListener() {
-	        var answer = confirm(\"Действительно начать новую игру?\");
-	        if (answer) {
-	            deleteAllCookies();
-	            localStorage.removeItem('logs');
-	            window.location.reload(false);
-	        }
+	    	swal({
+				text: \"Действительно начать новую игру?\",
+				buttons: true,
+				icon: \"warning\",
+				dangerMode: true,
+	    	})
+	    	.then((answer) => {
+				if (answer) {
+		            deleteAllCookies();
+		            localStorage.removeItem('logs');
+		            window.location.reload(false);
+		        }
+	    	});
 	    }
 	    function testshotButtonListener() {
 	        xhrSend(\"method=testshot:chooseattacker\");

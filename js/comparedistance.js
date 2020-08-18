@@ -92,7 +92,9 @@ function yesButtonListener() {
                 xhr.send("method=testshot:checkkill&indexDistance=" + s);
             }
             else {
-                alert("Выберите дальность!");
+                swal({
+                    text: "Выберите дальность!",
+                });
             }
         }
         else {
@@ -204,7 +206,9 @@ function yesnoKeyListener(e) {
                     xhr.send("method=testshot:checkkill&indexDistance=" + s);
                 }
                 else {
-                    alert("Выберите дальность!");
+                    swal({
+                        text: "Выберите дальность!",
+                    });
                 }
             }
         }

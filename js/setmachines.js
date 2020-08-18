@@ -53,7 +53,9 @@ function getSiblingByTag(tag, th) {
 document.getElementById('setmachines').addEventListener("click", clickButton);
 function clickButton() {
     if (numOfMachines > 20) {
-        alert("Машин больше 20! Пожалуйста, убавьте их количество!");
+        swal({
+            text: "Машин больше 20! Пожалуйста, убавьте их количество!",
+        });
     }
     else {
         var emptyPolaris = true;
@@ -90,7 +92,9 @@ function clickButton() {
             xhrSend("method=gateway");
         }
         else {
-            alert("Выберите хотя бы один отряд из каждой стороны!");
+            swal({
+                text: "Выберите хотя бы один отряд из каждой стороны!",
+            });
         }
     }
 }
@@ -102,7 +106,9 @@ function plusListener() {
     if (document.getElementById("limit").value.match(reg)) {
         if (this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id == "polaris") {
             if (polarisMoney + Number(this.parentNode.parentNode.dataset.cost) > Number(document.getElementById("limit").value)) {
-                alert("Превышен лимит!");
+                swal({
+                    text: "Превышен лимит!",
+                });
             }
             else {
                 var input = this.parentNode.parentNode.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
@@ -114,7 +120,9 @@ function plusListener() {
         }
         else {
             if (protectoratMoney + Number(this.parentNode.parentNode.dataset.cost) > Number(document.getElementById("limit").value)) {
-                alert("Превышен лимит!");
+                swal({
+                    text: "Превышен лимит!",
+                });
             }
             else {
                 var input = this.parentNode.parentNode.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
@@ -137,7 +145,9 @@ function plusListener() {
         }
     }
     else {
-        alert("Некорректно введен лимит!");
+        swal({
+            text: "Некорректно введен лимит!",
+        });
     }
 }
 function minusListener() {
