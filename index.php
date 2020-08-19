@@ -507,7 +507,7 @@
 				$sizeSideMachines = count($sideMachines);
 				$fixSizeSideMachines = $sizeSideMachines;
 				for ($z = 0; $z < $fixSizeSideMachines; $z++) {
-                    if ($sideMachines[$z] == substr($target, 3)) {
+                    if ($sideMachines[$z] == $target) {
                         $sizeSideMachines--;
                         $tempSideMachines = array();
                         for ($x = 0; $x < $z; $x++) {
@@ -520,7 +520,7 @@
                     }
                 }
                 for ($z = 0; $z < $sizeSideMachines; $z++) {
-                    if ($sideMachines[$z] > substr($target, 3)) {
+                    if ($sideMachines[$z] > $target) {
                         $sideMachines[$z]--;
                     }
                 }
@@ -1472,7 +1472,7 @@
 	    				$logs = "<p>Победил атакующий</p>";
 	    				$polarisMachines = json_decode($_COOKIE['polaris-machines']);
 	                	$protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
-	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $_COOKIE['idAttacker'], ceil(($attack - $defence)/2), $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
+	    				minusStrength($dbh, false, substr($_COOKIE['idAttacker'], 3), $_COOKIE['idAttacker'], ceil(($attack - $defence)/2), $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
 	    				if (substr($_COOKIE['idTarget'], 3) > substr($_COOKIE['idAttacker'], 3)) {
 	    					$target = substr($_COOKIE['idTarget'], 3) - 1;
 	    				}
@@ -1485,7 +1485,7 @@
 	    				$logs = "<p>Победил защищающийся</p>";
 	    				$polarisMachines = json_decode($_COOKIE['polaris-machines']);
 	                	$protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
-	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $_COOKIE['idAttacker'], $defence - $attack, $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
+	    				minusStrength($dbh, false, substr($_COOKIE['idAttacker'], 3), $_COOKIE['idAttacker'], $defence - $attack, $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
 	    				if (substr($_COOKIE['idTarget'], 3) > substr($_COOKIE['idAttacker'], 3)) {
 	    					$target = substr($_COOKIE['idTarget'], 3) - 1;
 	    				}
@@ -1498,7 +1498,7 @@
 	    				$logs = "<p>Ничья</p>";
 	    				$polarisMachines = json_decode($_COOKIE['polaris-machines']);
 	                	$protectoratMachines = json_decode($_COOKIE['protectorat-machines']);
-	    				minusStrength($dbh, false, $_COOKIE['idAttacker'], $_COOKIE['idAttacker'], 0, $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
+	    				minusStrength($dbh, false, substr($_COOKIE['idAttacker'], 3), $_COOKIE['idAttacker'], 0, $tempHTML, $logs, true, $machines, $polarisMachines, $protectoratMachines);
 	    				if (substr($_COOKIE['idTarget'], 3) > substr($_COOKIE['idAttacker'], 3)) {
 	    					$target = substr($_COOKIE['idTarget'], 3) - 1;
 	    				}
